@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/mitchellh/mapstructure"
@@ -145,7 +144,7 @@ func StringToPrivateKeyHookFunc() mapstructure.DecodeHookFuncType {
 		// convert input to string
 		raw := data.(string)
 		if raw == "" {
-			return nil, fmt.Errorf("empty private key content")
+			return new(ecdsa.PrivateKey), nil
 		}
 
 		// try to decode the key
