@@ -22,8 +22,8 @@ type Config struct {
 	// Logger configuration
 	Log Log `mapstructure:"log"`
 
-	// Lachesis represents the node structure
-	Lachesis Lachesis `mapstructure:"node"`
+	// Opera represents the node structure
+	Opera Opera `mapstructure:"opera"`
 
 	// Database configuration
 	Db Database `mapstructure:"db"`
@@ -92,8 +92,8 @@ type Log struct {
 	Format string `mapstructure:"format"`
 }
 
-// Lachesis represents the Lachesis node access configuration
-type Lachesis struct {
+// Opera represents the Opera node access configuration
+type Opera struct {
 	Url string `mapstructure:"url"`
 }
 

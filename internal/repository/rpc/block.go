@@ -71,7 +71,7 @@ func (ftm *FtmBridge) Block(numTag *string) (*types.Block, error) {
 	}
 
 	// detect block not found situation; block number is zero and the hash is also zero
-	if uint64(block.Number) == 0 && block.Hash.Big().Cmp(big.NewInt(0)) == 0 {
+	if uint64(block.Number) == 0 && block.Size == 0 {
 		ftm.log.Debugf("block [%s] not found", *numTag)
 		return nil, fmt.Errorf("block not found")
 	}

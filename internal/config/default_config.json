@@ -1,0 +1,63 @@
+{
+  "app_name": "Chain4Travel GraphQL API Server",
+  "cache": {
+    "eviction": 900000000000,
+    "size": 4096
+  },
+  "compiler": {
+    "sol": "/usr/bin/solc"
+  },
+  "db": {
+    "db": "chain4travel",
+    "url": "mongodb://localhost:27017"
+  },
+  "defi": {
+    "fmint": {
+      "address_provider": "0x0000000000000000000000000000000000000000"
+    },
+    "uniswap": {
+      "core": "0x0000000000000000000000000000000000000000",
+      "router": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  "erc20_logos": {
+    "0x0000000000000000000000000000000000000000": "https://repository.fantom.network/logos/erc20.svg"
+  },
+  "erc20_tokens_file": "tokens.json",
+  "opera": {
+    "url": "/path/to/opera.ipc"
+  },
+  "log": {
+    "format": "%{color}%{level:-8s} %{shortpkg}/%{shortfunc}%{color:reset}: %{message}",
+    "level": "INFO"
+  },
+  "me": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "pkey": ""
+  },
+  "server": {
+    "bind": "localhost:16761",
+    "cors_origins": [
+      "*"
+    ],
+    "domain": "localhost:16761",
+    "header_timeout": 1,
+    "idle_timeout": 1,
+    "origin": "https://localhost",
+    "peers": [
+      "https://localhost:16761/api"
+    ],
+    "read_timeout": 2,
+    "resolver_timeout": 30,
+    "write_timeout": 15
+  },
+  "staking": {
+    "sfc": "0xFC00FACE00000000000000000000000000000000",
+    "sti": "0x0000000000000000000000000000000000000000",
+    "token": "0x0000000000000000000000000000000000000000",
+    "tokenizer": "0x0000000000000000000000000000000000000000"
+  },
+  "voting": {
+    "sources": []
+  }
+}

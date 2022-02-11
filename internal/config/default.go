@@ -41,8 +41,8 @@ const (
 	// defLoggingFormat holds default format of the Logger output
 	defLoggingFormat = "%{color}%{level:-8s} %{shortpkg}/%{shortfunc}%{color:reset}: %{message}"
 
-	// defLachesisUrl holds default Lachesis connection string
-	defLachesisUrl = "~/.lachesis/data/lachesis.ipc"
+	// defOperaUrl holds default opera connection string
+	defOperaUrl = "~/.opera/opera.ipc"
 
 	// defMongoUrl holds default MongoDB connection string
 	defMongoUrl = "mongodb://localhost:27017"
@@ -108,7 +108,7 @@ func applyDefaults(cfg *viper.Viper) {
 	cfg.SetDefault(keySignaturePrivateKey, defSelfPrivateKey)
 	cfg.SetDefault(keyLoggingLevel, defLoggingLevel)
 	cfg.SetDefault(keyLoggingFormat, defLoggingFormat)
-	cfg.SetDefault(keyLachesisUrl, defLachesisUrl)
+	cfg.SetDefault(keyOperaUrl, defOperaUrl)
 	cfg.SetDefault(keyMongoUrl, defMongoUrl)
 	cfg.SetDefault(keyMongoDatabase, defMongoDatabase)
 	cfg.SetDefault(keySolCompilerPath, defSolCompilerPath)

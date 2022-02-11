@@ -84,7 +84,7 @@ func (ftm *FtmBridge) downloadStakerInfo(stUrl string) (*types.StakerInfo, error
 	}
 
 	// be honest, set agent
-	req.Header.Set("User-Agent", "Fantom GraphQL API Server")
+	req.Header.Set("User-Agent", "Chain4Travel GraphQL API Server")
 
 	// process the request
 	res, err := cl.Do(req)
