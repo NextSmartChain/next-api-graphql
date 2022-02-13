@@ -9,14 +9,18 @@ results. BigCache for in-memory object storage to speed up loading of frequently
 package repository
 
 import (
+	"fmt"
+	"sync"
+	"time"
+
 	"fantom-api-graphql/internal/config"
 	"fantom-api-graphql/internal/logger"
 	"fantom-api-graphql/internal/repository/cache"
 	"fantom-api-graphql/internal/repository/db"
 	"fantom-api-graphql/internal/repository/rpc"
-	"fmt"
+	"fantom-api-graphql/internal/types"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"golang.org/x/sync/singleflight"
-	"sync"
 )
 
 // repo represents an instance of the Repository manager.
@@ -107,6 +111,8 @@ func newRepository() Repository {
 		solCompiler: cfg.Compiler.DefaultSolCompilerPath,
 	}
 
+	registerSystemContracts(&p)
+
 	// return the proxy
 	return &p
 }
@@ -147,6 +153,34 @@ func connect(cfg *config.Config, log logger.Logger) (*cache.MemBridge, *db.Mongo
 		return nil, nil, nil, err
 	}
 	return caBridge, dbBridge, rpcBridge, nil
+}
+
+// register system contracts
+func registerSystemContracts(p *proxy) {
+	// Check for SFC contract
+	if p.db.IsContractKnown(&p.cfg.Staking.SFCContract) {
+		p.log.Notice("System contracts already registered")
+		return
+	}
+	blockNumber := hexutil.Uint64(0)
+	block, err := p.BlockByNumber(&blockNumber)
+	if err != nil {
+		log.Criticalf("unable to retrieve block 0, %s", err.Error())
+		return
+	}
+
+	// create pseudo transaction
+	tx := new(types.Transaction)
+	tx.TimeStamp = time.Unix(int64(block.TimeStamp), 0)
+	tx.Hash = block.Hash //0 hash
+
+	version, err := p.SfcVersion()
+	if err != nil {
+		log.Criticalf("unable to retrieve sfc version, %s", err.Error())
+		return
+	}
+
+	p.StoreContract(types.NewSfcContract(&p.cfg.Staking.SFCContract, uint64(version), block, tx))
 }
 
 // Close with close all connections and clean up the pending work for graceful termination.
