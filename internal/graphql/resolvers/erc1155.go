@@ -15,7 +15,7 @@ type ERC1155Contract struct {
 
 // NewErc1155Contract creates a new instance of resolvable ERC1155 contract.
 func NewErc1155Contract(adr *common.Address) *ERC1155Contract {
-	return &ERC1155Contract{ types.Erc1155Contract{Address: *adr} }
+	return &ERC1155Contract{types.Erc1155Contract{Address: *adr}}
 }
 
 // Erc1155Contract resolves an instance of ERC1155 contract if available.
@@ -35,9 +35,12 @@ func (token *ERC1155Contract) Uri(args *struct{ TokenId hexutil.Big }) (*string,
 }
 
 // BalanceOf resolves the available balance of the given token for a user.
-func (token *ERC1155Contract) BalanceOf(args *struct{ Owner common.Address; TokenId hexutil.Big }) (hexutil.Big, error) {
+func (token *ERC1155Contract) BalanceOf(args *struct {
+	Owner   common.Address
+	TokenId hexutil.Big
+}) (hexutil.Big, error) {
 	tokenId := big.Int(args.TokenId)
-	balance,err := repository.R().Erc1155BalanceOf(&token.Address, &args.Owner, &tokenId)
+	balance, err := repository.R().Erc1155BalanceOf(&token.Address, &args.Owner, &tokenId)
 	if err != nil || balance == nil {
 		return hexutil.Big{}, err
 	} else {
@@ -46,14 +49,17 @@ func (token *ERC1155Contract) BalanceOf(args *struct{ Owner common.Address; Toke
 }
 
 // BalanceOfBatch resolves the available balances of the given tokens and owners.
-func (token *ERC1155Contract) BalanceOfBatch(args *struct{ Owners []common.Address; TokenIds []hexutil.Big }) ([]hexutil.Big, error) {
+func (token *ERC1155Contract) BalanceOfBatch(args *struct {
+	Owners   []common.Address
+	TokenIds []hexutil.Big
+}) ([]hexutil.Big, error) {
 	tokenIds := make([]*big.Int, len(args.TokenIds))
 	for i, tokenId := range args.TokenIds {
 		value := big.Int(tokenId)
 		tokenIds[i] = &value
 	}
 
-	balances,err := repository.R().Erc1155BalanceOfBatch(&token.Address, &args.Owners, tokenIds)
+	balances, err := repository.R().Erc1155BalanceOfBatch(&token.Address, &args.Owners, tokenIds)
 	if err != nil || balances == nil {
 		return nil, err
 	} else {
@@ -66,7 +72,10 @@ func (token *ERC1155Contract) BalanceOfBatch(args *struct{ Owners []common.Addre
 }
 
 // IsApprovedForAll provides information about operator approved to manipulate with tokens of given owner.
-func (token *ERC1155Contract) IsApprovedForAll(args *struct{ Owner common.Address; Operator common.Address }) (*bool, error) {
+func (token *ERC1155Contract) IsApprovedForAll(args *struct {
+	Owner    common.Address
+	Operator common.Address
+}) (*bool, error) {
 	isApproved, err := repository.R().Erc1155IsApprovedForAll(&token.Address, &args.Owner, &args.Operator)
 	if err != nil { // ignore err, return null
 		return nil, nil

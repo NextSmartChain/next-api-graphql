@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	Erc20CacheIdPrefix   = "erc20_"
-	Erc721CacheIdPrefix  = "erc721_"
+	Erc20CacheIdPrefix  = "erc20_"
+	Erc721CacheIdPrefix = "erc721_"
 )
 
 // ErcTokenId generates cache id for storing ERC token contract.

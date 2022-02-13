@@ -79,7 +79,10 @@ func (token *ERC721Contract) GetApproved(args *struct{ TokenId hexutil.Big }) (*
 }
 
 // IsApprovedForAll provides information about operator approved to manipulate with NFT tokens of given owner.
-func (token *ERC721Contract) IsApprovedForAll(args *struct{ Owner common.Address; Operator common.Address }) (*bool, error) {
+func (token *ERC721Contract) IsApprovedForAll(args *struct {
+	Owner    common.Address
+	Operator common.Address
+}) (*bool, error) {
 	isApproved, err := repository.R().Erc721IsApprovedForAll(&token.Address, &args.Owner, &args.Operator)
 	if err != nil { // ignore err, return null
 		return nil, nil

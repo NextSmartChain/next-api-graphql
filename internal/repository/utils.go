@@ -85,6 +85,7 @@ func (p *proxy) isValidPriceSymbol(sym string) bool {
 func (p *proxy) Price(sym string) (types.Price, error) {
 	// check the symbol validity
 	if !p.isValidPriceSymbol(sym) {
+		p.log.Warningf("unknown price symbol [%s] requested", sym)
 		return types.Price{}, fmt.Errorf("unknown price symbol requested")
 	}
 

@@ -22,7 +22,7 @@ type Block struct {
 	Miner common.Address `json:"miner"`
 
 	// StateRoot represents the hash of the trie state root.
-	StateRoot  common.Hash `json:"stateRoot"`
+	StateRoot common.Hash `json:"stateRoot"`
 
 	// Difficulty represents integer of the difficulty for this block.
 	Difficulty hexutil.Uint64 `json:"difficulty"`

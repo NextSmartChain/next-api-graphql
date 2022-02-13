@@ -2,6 +2,8 @@
 package resolvers
 
 import (
+	"math/big"
+
 	"fantom-api-graphql/internal/repository"
 	"fantom-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
@@ -40,8 +42,13 @@ func (rs *rootResolver) Block(args *struct {
 // Parent resolves parent block information to the given block.
 func (blk *Block) Parent() (*Block, error) {
 	// get the parent block by hash
-	parent, err := repository.R().BlockByHash(&blk.ParentHash)
-	return NewBlock(parent), err
+	if blk.ParentHash.Big().Cmp(big.NewInt(0)) != 0 {
+		parent, err := repository.R().BlockByHash(&blk.ParentHash)
+		return NewBlock(parent), err
+	}
+	newBlk := new(Block)
+	newBlk.Hash = blk.ParentHash
+	return newBlk, nil
 }
 
 // TxHashList resolves list of hashes of transaction bundled in the block.
