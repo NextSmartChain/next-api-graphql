@@ -120,7 +120,7 @@ func updateContractDetails(sc *types.Contract, detail *compiler.Contract) {
 // is updated the the repository.
 func (p *proxy) ValidateContract(sc *types.Contract) error {
 	// get the byte code of the actual contract
-	tx, err := p.Transaction(&sc.TransactionHash)
+	tx, err := p.Transaction(&sc.TransactionHash, true)
 	if err != nil {
 		p.log.Errorf("can not get contract deployment transaction; %s", err.Error())
 		return err

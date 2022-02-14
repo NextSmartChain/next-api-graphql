@@ -150,7 +150,7 @@ type Repository interface {
 	LoadTransaction(hash *common.Hash) (*types.Transaction, error)
 
 	// Transaction returns a transaction at Opera blockchain by a hash, nil if not found.
-	Transaction(*common.Hash) (*types.Transaction, error)
+	Transaction(*common.Hash, bool) (*types.Transaction, error)
 
 	// Transactions returns list of transaction hashes at Opera blockchain.
 	Transactions(*string, int32) (*types.TransactionList, error)

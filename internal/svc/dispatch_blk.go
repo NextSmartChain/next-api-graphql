@@ -147,7 +147,7 @@ func (bld *blockDispatcher) processTxs(blk *types.Block) bool {
 // load a transaction detail from repository, if possible.
 func (bld *blockDispatcher) load(blk *types.Block, th *common.Hash) *types.Transaction {
 	// get transaction
-	trx, err := repo.Transaction(th)
+	trx, err := repo.Transaction(th, false)
 	if err != nil {
 		log.Errorf("transaction %s detail not available; %s", th.String(), err.Error())
 		return nil

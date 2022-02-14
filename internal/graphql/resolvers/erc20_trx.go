@@ -24,7 +24,7 @@ func (trx *ERC20Transaction) TrxHash() common.Hash {
 // Transaction resolves an instance of the transaction executing the ERC20 call.
 func (trx *ERC20Transaction) Transaction() (*Transaction, error) {
 	// get the transaction from repo
-	tx, err := repository.R().Transaction(&trx.TokenTransaction.Transaction)
+	tx, err := repository.R().Transaction(&trx.TokenTransaction.Transaction, false)
 	if err != nil {
 		return nil, err
 	}

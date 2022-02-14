@@ -79,7 +79,7 @@ func NewContract(con *types.Contract) *Contract {
 
 // DeployedBy resolves the deployment transaction of the contract.
 func (con *Contract) DeployedBy() (*Transaction, error) {
-	tr, err := repository.R().Transaction(&con.TransactionHash)
+	tr, err := repository.R().Transaction(&con.TransactionHash, false)
 	return NewTransaction(tr), err
 }
 

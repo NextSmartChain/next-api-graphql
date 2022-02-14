@@ -24,7 +24,7 @@ func (trx *ERC721Transaction) TrxHash() common.Hash {
 // Transaction resolves an instance of the transaction executing the ERC721 call.
 func (trx *ERC721Transaction) Transaction() (*Transaction, error) {
 	// get the transaction from repo
-	tx, err := repository.R().Transaction(&trx.TokenTransaction.Transaction)
+	tx, err := repository.R().Transaction(&trx.TokenTransaction.Transaction, false)
 	if err != nil {
 		return nil, err
 	}

@@ -68,7 +68,7 @@ func (blk *Block) TxList() ([]*Transaction, error) {
 
 	// loop the hashes and extract transactions
 	for i, hash := range blk.Txs {
-		trx, err := repository.R().Transaction(hash)
+		trx, err := repository.R().Transaction(hash, false)
 		if err != nil {
 			return nil, err
 		}

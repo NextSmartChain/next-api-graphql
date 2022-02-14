@@ -26,7 +26,7 @@ func NewTransaction(trx *types.Transaction) *Transaction {
 // Transaction resolves blockchain transaction by transaction hash.
 func (rs *rootResolver) Transaction(args *struct{ Hash common.Hash }) (*Transaction, error) {
 	// get the transaction from repository
-	trx, err := repository.R().Transaction(&args.Hash)
+	trx, err := repository.R().Transaction(&args.Hash, true)
 	if err != nil {
 		log.Warningf("can not get transaction %s", args.Hash)
 		return nil, err

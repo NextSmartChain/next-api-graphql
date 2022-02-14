@@ -34,15 +34,19 @@ func (p *proxy) CacheTransaction(trx *types.Transaction) {
 
 // Transaction returns a transaction at Opera blockchain by a hash, nil if not found.
 // If the transaction is not found, ErrTransactionNotFound error is returned.
-func (p *proxy) Transaction(hash *common.Hash) (*types.Transaction, error) {
+func (p *proxy) Transaction(hash *common.Hash, needBinary bool) (*types.Transaction, error) {
 	// log
 	p.log.Debugf("requested transaction %s", hash.String())
 
 	// try to use the in-memory cache
 	if trx := p.cache.PullTransaction(hash); trx != nil {
-		// log and return
-		p.log.Debugf("transaction %s loaded from cache", hash.String())
-		return trx, nil
+		if needBinary && trx.LargeInput {
+			p.log.Debugf("transaction %s loaded from cache, but need large binary", hash.String())
+		} else {
+			// log and return
+			p.log.Debugf("transaction %s loaded from cache", hash.String())
+			return trx, nil
+		}
 	}
 
 	// return the value
