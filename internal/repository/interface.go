@@ -136,9 +136,6 @@ type Repository interface {
 	// LockingAllowed indicates if the stake locking has been enabled in SFC.
 	LockingAllowed() (bool, error)
 
-	// IsSfcContract returns true if the given address points to the SFC contract.
-	IsSfcContract(*common.Address) bool
-
 	// IsStiContract returns true if the given address points to the STI contract.
 	IsStiContract(*common.Address) bool
 

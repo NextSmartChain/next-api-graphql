@@ -104,9 +104,6 @@ func (acd *accDispatcher) wallet(acc *eventAcc) error {
 	// notify new account detected
 	log.Debugf("found new account %s", acc.addr.String())
 
-	// check if the target address is not an SFC contract
-	acd.checkSfc(acc)
-
 	// add the account into the database
 	err := repo.StoreAccount(&types.Account{
 		Address:      *acc.addr,
@@ -119,29 +116,6 @@ func (acd *accDispatcher) wallet(acc *eventAcc) error {
 		log.Errorf("can not add account %s; %s", acc.addr.String(), err.Error())
 	}
 	return err
-}
-
-// checkSfc verifies if the target account is the SFC contract
-// and if so, it adds the SFC target with a different type.
-func (acd *accDispatcher) checkSfc(acc *eventAcc) {
-	// act on SFC detection
-	if uint64(acc.blk.Number) < sfcCheckBelowBlock && repo.IsSfcContract(acc.addr) {
-		// change the type to SFC contract
-		acc.act = types.AccountTypeSFC
-
-		// get the SFC version
-		ver, err := repo.SfcVersion()
-		if err == nil {
-			// log what we found
-			log.Debugf("detected SFC contract %d.%d.%d", byte((ver>>16)&255), byte((ver>>8)&255), byte(ver&255))
-
-			// add the contract
-			err = repo.StoreContract(types.NewSfcContract(acc.addr, uint64(ver), acc.blk, acc.trx))
-			if err != nil {
-				log.Errorf("can not add the SFC contract at %s; %s", acc.addr.String(), err.Error())
-			}
-		}
-	}
 }
 
 // processContract processes contract account with detection.

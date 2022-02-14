@@ -157,11 +157,7 @@ func connect(cfg *config.Config, log logger.Logger) (*cache.MemBridge, *db.Mongo
 
 // register system contracts
 func registerSystemContracts(p *proxy) {
-	// Check for SFC contract
-	if p.db.IsContractKnown(&p.cfg.Staking.SFCContract) {
-		p.log.Notice("System contracts already registered")
-		return
-	}
+
 	blockNumber := hexutil.Uint64(0)
 	block, err := p.BlockByNumber(&blockNumber)
 	if err != nil {
@@ -174,13 +170,34 @@ func registerSystemContracts(p *proxy) {
 	tx.TimeStamp = time.Unix(int64(block.TimeStamp), 0)
 	tx.Hash = block.Hash //0 hash
 
+	account := types.Account{
+		Address:      p.cfg.Staking.NodeDriverContract,
+		ContractTx:   &block.Hash, //0 hash
+		Type:         types.AccountTypeSFC,
+		LastActivity: block.TimeStamp,
+		TrxCounter:   1,
+	}
+
 	version, err := p.SfcVersion()
 	if err != nil {
 		log.Criticalf("unable to retrieve sfc version, %s", err.Error())
 		return
 	}
 
-	p.StoreContract(types.NewSfcContract(&p.cfg.Staking.SFCContract, uint64(version), block, tx))
+	if !p.db.IsContractKnown(&p.cfg.Staking.NodeDriverContract) {
+		log.Info("register node driver contract")
+		if err = p.StoreAccount(&account); err == nil {
+			p.StoreContract(types.NewNodeDriverContract(&p.cfg.Staking.NodeDriverContract, uint64(version), block, tx))
+		}
+	}
+
+	if !p.db.IsContractKnown(&p.cfg.Staking.SFCContract) {
+		log.Info("register sfc contract")
+		account.Address = p.cfg.Staking.SFCContract
+		if err = p.StoreAccount(&account); err == nil {
+			p.StoreContract(types.NewSfcContract(&p.cfg.Staking.SFCContract, uint64(version), block, tx))
+		}
+	}
 }
 
 // Close with close all connections and clean up the pending work for graceful termination.
