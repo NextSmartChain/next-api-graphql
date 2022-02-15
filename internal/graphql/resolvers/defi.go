@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
-// defiWFTMSymbol is the symbol used for wrapped FTM tokens.
-const defiWFTMSymbol = "WFTM"
+// defiWrappedNativeSymbol is the symbol used for wrapped native tokens.
+const defiWrappedNativeSymbol = "WCAM"
 
 // DefiToken represents a resolvable DeFi token instance.
 type DefiToken struct {
@@ -37,7 +37,7 @@ func (rs *rootResolver) DefiTokens() ([]*DefiToken, error) {
 	return list, nil
 }
 
-// DefiNativeToken resolves the native FTM wrapper token.
+// DefiNativeToken resolves the native wrapper token.
 func (rs *rootResolver) DefiNativeToken() *ERC20Token {
 	// get the token address
 	adr, err := repository.R().NativeTokenAddress()
@@ -65,10 +65,10 @@ func (dt *DefiToken) Allowance(args *struct{ Owner common.Address }) (hexutil.Bi
 	return repository.R().Erc20Allowance(&dt.Address, &args.Owner, nil)
 }
 
-// CanWrapFTM signals if the token can be used to wrap native FTM
+// CanWrapNative signals if the token can be used to wrap native token
 // to get some amount of it.
-func (dt *DefiToken) CanWrapFTM() bool {
-	return dt.Symbol == defiWFTMSymbol
+func (dt *DefiToken) CanWrapNative() bool {
+	return dt.Symbol == defiWrappedNativeSymbol
 }
 
 // TotalSupply represents the total amount of tokens on supply.

@@ -130,6 +130,7 @@ func (acd *accDispatcher) processContract(acc *eventAcc) error {
 		return err
 	}
 	acc.act = accountType
+	acc.deploy = &acc.trx.Hash
 
 	// insert the contract record if possible
 	if contract != nil {

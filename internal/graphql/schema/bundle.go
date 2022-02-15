@@ -70,9 +70,9 @@ type DefiToken {
     # in the DeFi functions at all.
     isActive: Boolean!
 
-    # canWrapFTM signals if the token can be used
-    # to wrap native FTM tokens for DeFi trading.
-    canWrapFTM: Boolean!
+    # canWrapNative signals if the token can be used
+    # to wrap native tokens for DeFi trading.
+    canWrapNative: Boolean!
 
     # canDeposit signals if the token can be used
     # in deposit as a collateral asset.
@@ -638,12 +638,12 @@ type Delegation {
     # to the stake amount on premature unlock
     unlockPenalty(amount: BigInt!): BigInt!
 
-    # outstandingSFTM represents the amount of sFTM tokens representing
+    # outstandingSNative represents the amount of sNative tokens representing
     # the tokenized stake minted and un-repaid on this delegation.
     outstandingSFTM: BigInt!
 
     # tokenizerAllowedToWithdraw indicates if the stake tokenizer allows the stake
-    # to be withdrawn. That means all the sFTM tokens have been repaid and the sFTM
+    # to be withdrawn. That means all the sNative tokens have been repaid and the sNative
     # debt is effectively zero for the delegation.
     tokenizerAllowedToWithdraw: Boolean!
 }
@@ -1195,22 +1195,22 @@ type DefiSettings {
 
 # EstimatedRewards represents a calculated rewards estimation for an account or amount staked
 type EstimatedRewards {
-    # Amount of FTM tokens expected to be staked for the calculation.
+    # Amount of native tokens expected to be staked for the calculation.
     staked: Long!
 
-    # dailyReward represents amount of FTM tokens estimated
+    # dailyReward represents amount of native tokens estimated
     # to be rewarded for staked amount in average per day.
     dailyReward: BigInt!
 
-    # weeklyReward represents amount of FTM tokens estimated
+    # weeklyReward represents amount of native tokens estimated
     # to be rewarded for staked amount in average per week.
     weeklyReward: BigInt!
 
-    # monthlyReward represents amount of FTM tokens estimated
+    # monthlyReward represents amount of native tokens estimated
     # to be rewarded for staked amount in average per month.
     monthlyReward: BigInt!
 
-    # yearlyReward represents amount of FTM tokens estimated
+    # yearlyReward represents amount of native tokens estimated
     # to be rewarded for staked amount in average per year.
     yearlyReward: BigInt!
 
@@ -1220,14 +1220,14 @@ type EstimatedRewards {
     # of tokens yearly.
     currentRewardRateYearly: Int!
 
-    # Total amount of staked FTM tokens used for the calculation in WEI units.
+    # Total amount of staked native tokens used for the calculation in WEI units.
     # The estimation uses total staked amount, not the effective amount provided
     # by the last epoch. The effective amount does not include current
     # un-delegations and also skips offline self-staking and flagged staking.
     totalStaked: BigInt!
 
     # Information about the last sealed epoch of the Opera blockchain.
-    # The epoch provides useful information about total FTM supply,
+    # The epoch provides useful information about total native token supply,
     # total amount staked, rewards rate and weight, fee, etc.
     lastEpoch: Epoch!
 }
@@ -2125,7 +2125,7 @@ type Query {
     price(to:String!):Price!
 
     # Get calculated staking rewards for an account or given
-    # staking amount in FTM tokens.
+    # staking amount in native tokens.
     # At least one of the address and amount parameters must be provided.
     # If you provide both, the address takes precedence and the amount is ignored.
     estimateRewards(address:Address, amount:Long):EstimatedRewards!
