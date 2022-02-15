@@ -18,6 +18,7 @@ import (
 	"fantom-api-graphql/internal/repository/cache"
 	"fantom-api-graphql/internal/repository/db"
 	"fantom-api-graphql/internal/repository/rpc"
+	"fantom-api-graphql/internal/repository/rpc/contracts"
 	"fantom-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"golang.org/x/sync/singleflight"
@@ -187,7 +188,7 @@ func registerSystemContracts(p *proxy) {
 	if !p.db.IsContractKnown(&p.cfg.Staking.NodeDriverContract) {
 		log.Info("register node driver contract")
 		if err = p.StoreAccount(&account); err == nil {
-			p.StoreContract(types.NewNodeDriverContract(&p.cfg.Staking.NodeDriverContract, uint64(version), block, tx))
+			p.StoreContract(types.NewSfcContract(&p.cfg.Staking.NodeDriverContract, uint64(version), "NodeDriver", contracts.NodeDriverABI, block, tx))
 		}
 	}
 
@@ -195,9 +196,17 @@ func registerSystemContracts(p *proxy) {
 		log.Info("register sfc contract")
 		account.Address = p.cfg.Staking.SFCContract
 		if err = p.StoreAccount(&account); err == nil {
-			p.StoreContract(types.NewSfcContract(&p.cfg.Staking.SFCContract, uint64(version), block, tx))
+			p.StoreContract(types.NewSfcContract(&p.cfg.Staking.SFCContract, uint64(version), "SFC Contract", contracts.SfcContractABI, block, tx))
 		}
 	}
+	if !p.db.IsContractKnown(&p.cfg.Staking.NetworkInitializerContract) {
+		log.Info("register network initializer contract")
+		account.Address = p.cfg.Staking.NetworkInitializerContract
+		if err = p.StoreAccount(&account); err == nil {
+			p.StoreContract(types.NewSfcContract(&p.cfg.Staking.NetworkInitializerContract, uint64(version), "Network Initializer", contracts.NetworkInitializerABI, block, tx))
+		}
+	}
+
 }
 
 // Close with close all connections and clean up the pending work for graceful termination.

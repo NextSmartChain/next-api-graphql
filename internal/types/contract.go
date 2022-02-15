@@ -136,13 +136,13 @@ func NewErcTokenContract(addr *common.Address, name string, block *Block, trx *T
 }
 
 // NewSfcContract creates new Special Purpose Contract reference
-func NewNodeDriverContract(addr *common.Address, ver uint64, block *Block, trx *Transaction) *Contract {
+func NewSfcContract(addr *common.Address, ver uint64, name, abi string, block *Block, trx *Transaction) *Contract {
 	// make the contract
 	con := NewGenericContract(addr, block, trx)
 
 	// set additional details
 	con.Type = AccountTypeSFC
-	con.Name = "Node Driver Contract"
+	con.Name = name
 	con.Version = fmt.Sprintf("%s.%s.%s",
 		string([]byte{byte((ver >> 16) & 255)}),
 		string([]byte{byte((ver >> 8) & 255)}),
@@ -151,28 +151,7 @@ func NewNodeDriverContract(addr *common.Address, ver uint64, block *Block, trx *
 	con.License = "MIT"
 	con.Compiler = "Solidity"
 	con.SourceCode = "https://github.com/Fantom-foundation/opera-sfc"
-	con.Abi = contracts.NodeDriverABI
-	con.Validated = &block.TimeStamp
-	return con
-}
-
-// NewSfcContract creates new Special Purpose Contract reference
-func NewSfcContract(addr *common.Address, ver uint64, block *Block, trx *Transaction) *Contract {
-	// make the contract
-	con := NewGenericContract(addr, block, trx)
-
-	// set additional details
-	con.Type = AccountTypeSFC
-	con.Name = "SFC Contract"
-	con.Version = fmt.Sprintf("%s.%s.%s",
-		string([]byte{byte((ver >> 16) & 255)}),
-		string([]byte{byte((ver >> 8) & 255)}),
-		string([]byte{byte(ver & 255)}))
-	con.SupportContact = "https://fantom.foundation"
-	con.License = "MIT"
-	con.Compiler = "Solidity"
-	con.SourceCode = "https://github.com/Fantom-foundation/opera-sfc"
-	con.Abi = contracts.SfcContractABI
+	con.Abi = abi
 	con.Validated = &block.TimeStamp
 	return con
 }

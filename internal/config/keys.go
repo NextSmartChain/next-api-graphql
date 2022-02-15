@@ -55,11 +55,12 @@ const (
 	keyErc20Logos            = "erc20_logos"
 
 	// PoS staking configuration
-	keyStakingNodeDriverContract = "staking.node_driver"
-	keyStakingSfcContract        = "staking.sfc"
-	keyStakingStiContract        = "staking.sti"
-	keyStakingTokenizerContract  = "staking.tokenizer"
-	keyStakingERC20Token         = "staking.token"
+	keyStakingNetworkInitializerContract = "staking.network_initializer"
+	keyStakingNodeDriverContract         = "staking.node_driver"
+	keyStakingSfcContract                = "staking.sfc"
+	keyStakingStiContract                = "staking.sti"
+	keyStakingTokenizerContract          = "staking.tokenizer"
+	keyStakingERC20Token                 = "staking.token"
 
 	// defi related configs
 	keyDefiFMintAddressProvider = "defi.fmint.address_provider"

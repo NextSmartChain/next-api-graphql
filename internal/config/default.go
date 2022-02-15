@@ -62,6 +62,9 @@ const (
 	// defApiStateOrigin represents the default origin used for API state syncing
 	defApiStateOrigin = "https://localhost"
 
+	// defNetworkInitializerContract is the default address of the NetworkInitializer contract
+	defNetworkInitializerContract = "0xd1005eed00000000000000000000000000000000"
+
 	// defNodeDriverContract is the default address of the NodeDriver contract
 	defNodeDriverContract = "0xd100a01e00000000000000000000000000000000"
 
@@ -138,6 +141,7 @@ func applyDefaults(cfg *viper.Viper) {
 	cfg.SetDefault(keyCorsAllowOrigins, defCorsAllowOrigins)
 
 	// staking configuration defaults
+	cfg.SetDefault(keyStakingNetworkInitializerContract, defNetworkInitializerContract)
 	cfg.SetDefault(keyStakingNodeDriverContract, defNodeDriverContract)
 	cfg.SetDefault(keyStakingSfcContract, defSfcContract)
 	cfg.SetDefault(keyStakingStiContract, defStiContract)

@@ -122,11 +122,12 @@ type Repository struct {
 
 // Staking represents the PoS Staking module configuration.
 type Staking struct {
-	NodeDriverContract  common.Address `mapstructure:"node_driver"`
-	SFCContract         common.Address `mapstructure:"sfc"`
-	StiContract         common.Address `mapstructure:"sti"`
-	TokenizerContract   common.Address `mapstructure:"tokenizer"`
-	TokenizedStakeToken common.Address `mapstructure:"token"`
+	NetworkInitializerContract common.Address `mapstructure:"network_initializer"`
+	NodeDriverContract         common.Address `mapstructure:"node_driver"`
+	SFCContract                common.Address `mapstructure:"sfc"`
+	StiContract                common.Address `mapstructure:"sti"`
+	TokenizerContract          common.Address `mapstructure:"tokenizer"`
+	TokenizedStakeToken        common.Address `mapstructure:"token"`
 }
 
 // DeFi represents the DeFi and financial contracts configuration.
