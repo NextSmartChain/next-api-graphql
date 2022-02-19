@@ -11,6 +11,10 @@ import (
 // handleSfcCreatedStake handles a new stake event from SFC v1 and SFC v2 contract.
 // event CreatedStake(uint256 indexed stakerID, address indexed dagSfcAddress, uint256 amount)
 func handleSfcCreatedStake(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	handleNewDelegation(
 		lr,
 		new(big.Int).SetBytes(lr.Topics[1].Bytes()),
@@ -22,6 +26,10 @@ func handleSfcCreatedStake(lr *types.LogRecord) {
 // handleSfc1IncreasedStake handles a stake increase event from SFC v1 and SFC v2 contract.
 // event IncreasedStake(uint256 indexed stakerID, uint256 newAmount, uint256 diff)
 func handleSfc1IncreasedStake(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// get the validator address
 	valID := (*hexutil.Big)(new(big.Int).SetBytes(lr.Topics[1].Bytes()))
 	addr, err := repo.ValidatorAddress(valID)
@@ -41,6 +49,10 @@ func handleSfc1IncreasedStake(lr *types.LogRecord) {
 // handleSfc1WithdrawnStake handles a withdrawal request finalization event from SFC1.
 // event WithdrawnStake(uint256 indexed stakerID, uint256 penalty)
 func handleSfc1WithdrawnStake(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (1 uint256 = 32 bytes)
 	if len(lr.Data) != 32 {
 		log.Criticalf("%s lr invalid data length; expected 32 bytes, %d bytes given, %d topics given", lr.TxHash.String(), len(lr.Data), len(lr.Topics))
@@ -64,6 +76,10 @@ func handleSfc1WithdrawnStake(lr *types.LogRecord) {
 // without request ID.
 // DeactivatedStake(uint256 indexed stakerID)
 func handleSfc1DeactivatedStake(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data
 	if len(lr.Data) != 0 {
 		log.Criticalf("%s lr invalid data length; expected 0 bytes, %d bytes given, %d topics given", lr.TxHash.String(), len(lr.Data), len(lr.Topics))
@@ -94,6 +110,10 @@ func handleSfc1DeactivatedStake(lr *types.LogRecord) {
 // when a stake and/or delegation amount changes on a validator  account.
 // UpdatedStake(uint256 indexed stakerID, uint256 amount, uint256 delegatedMe)
 func handleSfc1UpdatedStake(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// get the validator address (we handle the stake as self-delegation in SFC3 context)
 	valID := (*hexutil.Big)(new(big.Int).SetBytes(lr.Topics[1].Bytes()))
 	addr, err := repo.ValidatorAddress(valID)

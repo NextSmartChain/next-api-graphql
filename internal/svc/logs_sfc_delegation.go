@@ -46,6 +46,10 @@ func handleNewDelegation(lr *types.LogRecord, stakerID *big.Int, addr common.Add
 // (SFCv1, SFCv2) event CreatedDelegation(address indexed delegator, uint256 indexed toStakerID, uint256 amount)
 // (SFCv3) event Delegated(address indexed delegator, uint256 indexed toValidatorID, uint256 amount)
 func handleSfcCreatedDelegation(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	handleNewDelegation(
 		lr,
 		new(big.Int).SetBytes(lr.Topics[2].Bytes()),
@@ -58,6 +62,10 @@ func handleSfcCreatedDelegation(lr *types.LogRecord) {
 // SFC1::IncreasedDelegation(address indexed delegator, uint256 indexed stakerID, uint256 newAmount, uint256 diff);
 // SFC1::PreparedToWithdrawDelegation(address indexed delegator, uint256 indexed stakerID)
 func handleSfc1IncreasedDelegation(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// get the validator ID
 	addr := common.BytesToAddress(lr.Topics[1].Bytes())
 	valID := new(big.Int).SetBytes(lr.Topics[2].Bytes())
@@ -75,6 +83,10 @@ func handleSfc1IncreasedDelegation(lr *types.LogRecord) {
 // withdrawals will be settled.
 // event Undelegated(address indexed delegator, uint256 indexed toValidatorID, uint256 indexed wrID, uint256 amount)
 func handleSfcUndelegated(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (1x uint256 = 32 bytes)
 	if len(lr.Data) != 32 {
 		log.Criticalf("%s lr invalid data length; expected 32 bytes, %d bytes given, %d topics given", lr.TxHash.String(), len(lr.Data), len(lr.Topics))
@@ -169,6 +181,10 @@ func handleFinishedWithdrawRequest(adr common.Address, valID *big.Int, reqID *bi
 // SFC1::DeactivatedDelegation(address indexed delegator, uint256 indexed stakerID)
 // SFC1::PreparedToWithdrawDelegation(address indexed delegator, uint256 indexed stakerID)
 func handleSfc1DeactivatedDelegation(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data
 	if len(lr.Data) != 0 {
 		log.Criticalf("%s lr invalid data length; expected 0 bytes, %d bytes given, %d topics given", lr.TxHash.String(), len(lr.Data), len(lr.Topics))
@@ -190,6 +206,10 @@ func handleSfc1DeactivatedDelegation(lr *types.LogRecord) {
 // handleSfc1CreatedWithdrawRequest handles withdraw request creation event in SFC1/2
 // CreatedWithdrawRequest(address indexed auth, address indexed receiver, uint256 indexed stakerID, uint256 wrID, bool delegation, uint256 amount)
 func handleSfc1CreatedWithdrawRequest(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (2x uint256 + 1x bool = 96 bytes)
 	if len(lr.Data) != 96 {
 		log.Criticalf("%s lr invalid data length; expected 96 bytes, %d bytes given", lr.TxHash.String(), len(lr.Data))
@@ -210,6 +230,10 @@ func handleSfc1CreatedWithdrawRequest(lr *types.LogRecord) {
 // handleSfc1PartialWithdrawByRequest handles SFC1 withdraw finalization event.
 // PartialWithdrawnByRequest(address indexed auth, address indexed receiver, uint256 indexed stakerID, uint256 wrID, bool delegation, uint256 penalty)
 func handleSfc1PartialWithdrawByRequest(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (2x uint256 + 1x bool = 96 bytes)
 	if len(lr.Data) != 96 {
 		log.Criticalf("%s lr invalid data length; expected 96 bytes, %d bytes given, %d topics given", lr.TxHash.String(), len(lr.Data), len(lr.Topics))
@@ -229,6 +253,10 @@ func handleSfc1PartialWithdrawByRequest(lr *types.LogRecord) {
 // handleSfc1UpdatedDelegation handles delegation update event.
 // UpdatedDelegation(address indexed delegator, uint256 indexed oldStakerID, uint256 indexed newStakerID, uint256 amount)
 func handleSfc1UpdatedDelegation(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (1x uint256 (value) = 32 bytes)
 	if len(lr.Data) != 32 {
 		log.Criticalf("%s lr invalid data length; expected 32 bytes, %d bytes given", lr.TxHash.String(), len(lr.Data))
@@ -256,6 +284,10 @@ func handleSfc1UpdatedDelegation(lr *types.LogRecord) {
 // handleSfcWithdrawn handles a withdrawal request finalization event.
 // event Withdrawn(address indexed delegator, uint256 indexed toValidatorID, uint256 indexed wrID, uint256 amount)
 func handleSfcWithdrawn(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// finish the request
 	handleFinishedWithdrawRequest(
 		common.BytesToAddress(lr.Topics[1].Bytes()),
@@ -269,6 +301,10 @@ func handleSfcWithdrawn(lr *types.LogRecord) {
 // handleSfc1WithdrawnDelegation handles a withdrawal request finalization event from SFC1.
 // event WithdrawnDelegation(address indexed delegator, uint256 indexed stakerID, uint256 penalty)
 func handleSfc1WithdrawnDelegation(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// extract the basic info about the request
 	addr := common.BytesToAddress(lr.Topics[1].Bytes())
 	valID := new(big.Int).SetBytes(lr.Topics[2].Bytes())

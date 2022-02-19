@@ -42,7 +42,7 @@ func (p *proxy) StoreStakerInfo(id *hexutil.Big, sti *types.StakerInfo) error {
 
 // RetrieveStakerInfo gets staker information from in-memory if available.
 func (p *proxy) RetrieveStakerInfo(id *hexutil.Big) *types.StakerInfo {
-	info := p.cache.PullStakerInfo(id);
+	info := p.cache.PullStakerInfo(id)
 	if info == nil {
 		if info, err := p.PullStakerInfo(id); err != nil || info.Name == nil {
 			return nil

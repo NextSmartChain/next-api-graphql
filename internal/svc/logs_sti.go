@@ -9,8 +9,8 @@ import (
 
 // handleDelegationLog handles a new delegation event from logs.
 func handleStiInfoUpdated(lr *types.LogRecord) {
-	// check for the correct recipient
-	if lr.Trx.To == nil || *lr.Trx.To != cfg.Staking.StiContract {
+	// check for address
+	if lr.Address != cfg.Staking.StiContract {
 		return
 	}
 	// get Staker Id
