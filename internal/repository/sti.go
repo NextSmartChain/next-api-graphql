@@ -17,7 +17,16 @@ import (
 
 // PullStakerInfo extracts an extended staker information from smart contact.
 func (p *proxy) PullStakerInfo(id *hexutil.Big) (*types.StakerInfo, error) {
-	return p.rpc.StakerInfo(id)
+	// retieve from rpc
+	info, err := p.rpc.StakerInfo(id)
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		info = new(types.StakerInfo)
+		p.StoreStakerInfo(id, info)
+	}
+	return info, nil
 }
 
 // StoreStakerInfo stores staker information to in-memory cache for future use.
@@ -33,7 +42,13 @@ func (p *proxy) StoreStakerInfo(id *hexutil.Big, sti *types.StakerInfo) error {
 
 // RetrieveStakerInfo gets staker information from in-memory if available.
 func (p *proxy) RetrieveStakerInfo(id *hexutil.Big) *types.StakerInfo {
-	return p.cache.PullStakerInfo(id)
+	info := p.cache.PullStakerInfo(id);
+	if info == nil {
+		if info, err := p.PullStakerInfo(id); err != nil || info.Name == nil {
+			return nil
+		}
+	}
+	return info
 }
 
 // IsStiContract returns true if the given address points to the STI contract.
