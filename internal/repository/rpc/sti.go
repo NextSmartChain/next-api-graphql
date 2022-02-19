@@ -16,6 +16,7 @@ package rpc
 //go:generate tools/abigen.sh --abi ./contracts/abi/st_info.abi --pkg contracts --type StakerInfoContract --out ./contracts/staker_info.go
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fantom-api-graphql/internal/repository/rpc/contracts"
 	"fantom-api-graphql/internal/types"
@@ -26,11 +27,12 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strings"
 	"time"
 )
 
 // stiRequestTimeout is number of seconds we wait for the staker information request to finish.
-const stiRequestTimeout = 2 * time.Second
+const stiRequestTimeout = 5 * time.Second
 
 // stiNameCheckRegex is the expression used to check for staker name validity
 var stiNameCheckRegex = regexp.MustCompile(`^[\w\d\s.\-_'$()]+$`)
@@ -70,39 +72,52 @@ func (ftm *FtmBridge) StakerInfo(id *hexutil.Big) (*types.StakerInfo, error) {
 
 // downloadStakerInfo tries to download staker information from the given URL address.
 func (ftm *FtmBridge) downloadStakerInfo(stUrl string) (*types.StakerInfo, error) {
-	// log what we are about to do
-	ftm.log.Debugf("downloading staker info address [%s]", stUrl)
+	var data []byte
+	// check for data url
+	if strings.HasPrefix(stUrl, "data:application/json;base64,") {
+		ftm.log.Debugf("using staker info address from dataUrl [%s]", stUrl)
 
-	// make a http client
-	cl := http.Client{Timeout: stiRequestTimeout}
+		var err error
+		// extract base64 encoded json
+		data, err = base64.StdEncoding.DecodeString(stUrl[29:])
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		// log what we are about to do
+		ftm.log.Debugf("downloading staker info address [%s]", stUrl)
 
-	// prep request
-	req, err := http.NewRequest(http.MethodGet, stUrl, nil)
-	if err != nil {
-		ftm.log.Errorf("can not request given staker info; %s", err.Error())
-		return nil, err
-	}
+		// make a http client
+		cl := http.Client{Timeout: stiRequestTimeout}
 
-	// be honest, set agent
-	req.Header.Set("User-Agent", "Chain4Travel GraphQL API Server")
+		// prep request
+		req, err := http.NewRequest(http.MethodGet, stUrl, nil)
+		if err != nil {
+			ftm.log.Errorf("can not request given staker info; %s", err.Error())
+			return nil, err
+		}
 
-	// process the request
-	res, err := cl.Do(req)
-	if err != nil {
-		ftm.log.Errorf("can not download staker info; %s", err.Error())
-		return nil, err
-	}
+		// be honest, set agent
+		req.Header.Set("User-Agent", "Chain4Travel GraphQL API Server")
 
-	// read the response
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		ftm.log.Errorf("can not read staker info response; %s", err.Error())
-		return nil, err
+		// process the request
+		res, err := cl.Do(req)
+		if err != nil {
+			ftm.log.Errorf("can not download staker info; %s", err.Error())
+			return nil, err
+		}
+
+		// read the response
+		data, err = ioutil.ReadAll(res.Body)
+		if err != nil {
+			ftm.log.Errorf("can not read staker info response; %s", err.Error())
+			return nil, err
+		}
 	}
 
 	// try to parse
 	var info types.StakerInfo
-	err = json.Unmarshal(body, &info)
+	err := json.Unmarshal(data, &info)
 	if err != nil {
 		ftm.log.Errorf("invalid response for staker info; %s", err.Error())
 		return nil, err
