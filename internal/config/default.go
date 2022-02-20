@@ -71,9 +71,6 @@ const (
 	// defSfcContract is the default address of the SFC contract
 	defSfcContract = "0xFC00FACE00000000000000000000000000000000"
 
-	// defStiContract holds deployment address of the Staker Info smart contract.
-	defStiContract = "0x92ffad75b8a942d149621a39502cdd8ad1dd57b4"
-
 	// defDefiFMintAddressProvider represents the address of the fMintAddressProvider
 	defDefiFMintAddressProvider = "0x730e27f6c52d07b1a6ab39b639b617dc566c91af"
 
@@ -144,7 +141,6 @@ func applyDefaults(cfg *viper.Viper) {
 	cfg.SetDefault(keyStakingNetworkInitializerContract, defNetworkInitializerContract)
 	cfg.SetDefault(keyStakingNodeDriverContract, defNodeDriverContract)
 	cfg.SetDefault(keyStakingSfcContract, defSfcContract)
-	cfg.SetDefault(keyStakingStiContract, defStiContract)
 	cfg.SetDefault(keyStakingTokenizerContract, EmptyAddress)
 	cfg.SetDefault(keyStakingERC20Token, EmptyAddress)
 

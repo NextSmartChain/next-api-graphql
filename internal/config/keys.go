@@ -58,7 +58,6 @@ const (
 	keyStakingNetworkInitializerContract = "staking.network_initializer"
 	keyStakingNodeDriverContract         = "staking.node_driver"
 	keyStakingSfcContract                = "staking.sfc"
-	keyStakingStiContract                = "staking.sti"
 	keyStakingTokenizerContract          = "staking.tokenizer"
 	keyStakingERC20Token                 = "staking.token"
 

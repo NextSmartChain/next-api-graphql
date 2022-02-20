@@ -13,11 +13,9 @@ func handleValidatorInfoUpdated(lr *types.LogRecord) {
 	if lr.Address != cfg.Staking.SFCContract {
 		return
 	}
-	// get Staker Id
+	// get validator Id
 	validatorID := (*hexutil.Big)(new(big.Int).SetBytes(lr.Data))
 
-	// is this a tx made on sti contract?
-	if info, err := repo.PullValidatorInfo(validatorID); err == nil && info != nil {
-		err = repo.StoreValidatorInfo(validatorID, info)
-	}
+	// update data from rpc
+	repo.UpdateValidatorInfo(validatorID)
 }

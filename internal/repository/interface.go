@@ -136,9 +136,6 @@ type Repository interface {
 	// LockingAllowed indicates if the stake locking has been enabled in SFC.
 	LockingAllowed() (bool, error)
 
-	// IsStiContract returns true if the given address points to the STI contract.
-	IsStiContract(*common.Address) bool
-
 	// StoreTransaction adds a new incoming transaction from blockchain to the repository.
 	StoreTransaction(*types.Block, *types.Transaction) error
 
@@ -197,8 +194,8 @@ type Repository interface {
 	// SfcMaxDelegatedRatio extracts a ratio between self delegation and received stake.
 	SfcMaxDelegatedRatio() (*big.Int, error)
 
-	// PullValidatorInfo extracts extended validator information.
-	PullValidatorInfo(*hexutil.Big) (*types.ValidatorInfo, error)
+	// UpdateValidatorInfo extracts extended validator information.
+	UpdateValidatorInfo(*hexutil.Big) (*types.ValidatorInfo, error)
 
 	// StoreValidatorInfo stores validator information to in-memory cache for future use.
 	StoreValidatorInfo(*hexutil.Big, *types.ValidatorInfo) error

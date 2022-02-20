@@ -9,14 +9,12 @@ results. BigCache for in-memory object storage to speed up loading of frequently
 package repository
 
 import (
-	"bytes"
 	"fantom-api-graphql/internal/types"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
-// PullValidatorInfo extracts an extended validator information from smart contact.
-func (p *proxy) PullValidatorInfo(id *hexutil.Big) (*types.ValidatorInfo, error) {
+// UpdateValidatorInfo extracts an extended validator information from smart contact.
+func (p *proxy) UpdateValidatorInfo(id *hexutil.Big) (*types.ValidatorInfo, error) {
 	// retieve from rpc
 	info, err := p.rpc.ValidatorInfo(id)
 	if err != nil {
@@ -24,8 +22,8 @@ func (p *proxy) PullValidatorInfo(id *hexutil.Big) (*types.ValidatorInfo, error)
 	}
 	if info == nil {
 		info = new(types.ValidatorInfo)
-		p.StoreValidatorInfo(id, info)
 	}
+	p.StoreValidatorInfo(id, info)
 	return info, nil
 }
 
@@ -44,14 +42,9 @@ func (p *proxy) StoreValidatorInfo(id *hexutil.Big, sti *types.ValidatorInfo) er
 func (p *proxy) RetrieveValidatorInfo(id *hexutil.Big) *types.ValidatorInfo {
 	info := p.cache.PullValidatorInfo(id)
 	if info == nil {
-		if info, err := p.PullValidatorInfo(id); err != nil || info.Name == nil {
+		if info, err := p.UpdateValidatorInfo(id); err != nil || info.Name == nil {
 			return nil
 		}
 	}
 	return info
-}
-
-// IsStiContract returns true if the given address points to the STI contract.
-func (p *proxy) IsStiContract(addr *common.Address) bool {
-	return bytes.Equal(addr.Bytes(), p.cfg.Staking.StiContract.Bytes())
 }
