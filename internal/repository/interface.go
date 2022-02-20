@@ -197,14 +197,14 @@ type Repository interface {
 	// SfcMaxDelegatedRatio extracts a ratio between self delegation and received stake.
 	SfcMaxDelegatedRatio() (*big.Int, error)
 
-	// PullStakerInfo extracts an extended staker information from smart contact.
-	PullStakerInfo(*hexutil.Big) (*types.StakerInfo, error)
+	// PullValidatorInfo extracts extended validator information.
+	PullValidatorInfo(*hexutil.Big) (*types.ValidatorInfo, error)
 
-	// StoreStakerInfo stores staker information to in-memory cache for future use.
-	StoreStakerInfo(*hexutil.Big, *types.StakerInfo) error
+	// StoreValidatorInfo stores validator information to in-memory cache for future use.
+	StoreValidatorInfo(*hexutil.Big, *types.ValidatorInfo) error
 
-	// RetrieveStakerInfo gets staker information from in-memory if available.
-	RetrieveStakerInfo(*hexutil.Big) *types.StakerInfo
+	// RetrieveValidatorInfo gets validator information from in-memory if available.
+	RetrieveValidatorInfo(*hexutil.Big) *types.ValidatorInfo
 
 	// IsDelegating returns if the given address is an SFC delegator.
 	IsDelegating(*common.Address) (bool, error)

@@ -278,18 +278,18 @@ type BlockListEdge {
     block: Block!
 }
 
-# StakerInfo represents extended staker information from smart contract.
-type StakerInfo {
-    "Name represents the name of the staker."
+# ValidatorInfo represents extended validator information.
+type ValidatorInfo {
+    "Name represents the name of the validator."
     name: String
 
-    "LogoUrl represents staker logo URL."
+    "LogoUrl represents validators logo URL."
     logoUrl: String
 
-    "Website represents a link to stakers website."
+    "Website represents a link to validators website."
     website: String
 
-    "Contact represents a link to contact to the staker."
+    "Contact represents a link to contact to the validator."
     contact: String
 }
 # GasPriceTick represents a collected gas price tick.
@@ -1026,8 +1026,8 @@ type Staker {
     # Ok = 0, bin 1 = Fork Detected, bin 256 = Validator Offline
     status: Long!
 
-    # StakerInfo represents extended staker information from smart contract.
-    stakerInfo: StakerInfo
+    # ValidatorInfo represents extended validator information.
+    validatorInfo: ValidatorInfo
 }
 
 # StakerFlagFilter represents a filter type for stakers with the given flag.

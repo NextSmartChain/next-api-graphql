@@ -60,18 +60,30 @@ func handleSfcCommonRewardClaim(lr *types.LogRecord, isRestake bool) {
 // handleSfcRestakeRewards handles a rewards re-stake event.
 // event RestakedRewards(address indexed delegator, uint256 indexed toValidatorID, uint256 lockupExtraReward, uint256 lockupBaseReward, uint256 unlockedReward)
 func handleSfcRestakeRewards(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	handleSfcCommonRewardClaim(lr, true)
 }
 
 // handleSfcClaimedRewards handles a rewards re-stake event.
 // event ClaimedRewards(address indexed delegator, uint256 indexed toValidatorID, uint256 lockupExtraReward, uint256 lockupBaseReward, uint256 unlockedReward)
 func handleSfcClaimedRewards(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	handleSfcCommonRewardClaim(lr, false)
 }
 
 // handleSfc1ClaimedDelegationReward handles a delegation reward claim from SFC1.
 // event ClaimedDelegationReward(address indexed from, uint256 indexed stakerID, uint256 reward, uint256 fromEpoch, uint256 untilEpoch)
 func handleSfc1ClaimedDelegationReward(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (3x uint256 = 3x32 bytes = 96 bytes)
 	if len(lr.Data) != 96 {
 		log.Criticalf("%s lr invalid data length; expected 96 bytes, given %d bytes", lr.TxHash.String(), len(lr.Data))
@@ -90,6 +102,10 @@ func handleSfc1ClaimedDelegationReward(lr *types.LogRecord) {
 // handleSfc1UnstashedReward handles rewards un-stash request event.
 // event UnstashedRewards(address indexed auth, address indexed receiver, uint256 rewards)
 func handleSfc1UnstashedReward(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (1x uint256 = 1x32 bytes)
 	if len(lr.Data) != 32 {
 		log.Criticalf("%s lr invalid data length; expected 32 bytes, given %d bytes", lr.TxHash.String(), len(lr.Data))
@@ -110,6 +126,10 @@ func handleSfc1UnstashedReward(lr *types.LogRecord) {
 // handleSfc1ClaimedValidatorReward handles validator reward claim.
 // event ClaimedValidatorReward(uint256 indexed stakerID, uint256 reward, uint256 fromEpoch, uint256 untilEpoch)
 func handleSfc1ClaimedValidatorReward(lr *types.LogRecord) {
+	// check for contract
+	if lr.Address != cfg.Staking.SFCContract {
+		return
+	}
 	// sanity check for data (3x uint256 = 3x32 bytes = 96 bytes)
 	if len(lr.Data) != 96 {
 		log.Criticalf("%s lr invalid data length; expected 96 bytes, given %d bytes", lr.TxHash.String(), len(lr.Data))

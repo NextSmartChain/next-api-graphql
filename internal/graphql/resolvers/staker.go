@@ -56,9 +56,9 @@ func (st Staker) Delegations(args struct {
 	return NewDelegationList(dl), nil
 }
 
-// StakerInfo resolves extended staker information if available.
-func (st Staker) StakerInfo() *types.StakerInfo {
-	return repository.R().RetrieveStakerInfo(&st.Id)
+// ValidatorInfo resolves extended validator information if available.
+func (st Staker) ValidatorInfo() *types.ValidatorInfo {
+	return repository.R().RetrieveValidatorInfo(&st.Id)
 }
 
 // DelegationLock returns information about validator lock.

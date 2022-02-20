@@ -73,8 +73,8 @@ type Staker {
     # Ok = 0, bin 1 = Fork Detected, bin 256 = Validator Offline
     status: Long!
 
-    # StakerInfo represents extended staker information from smart contract.
-    stakerInfo: StakerInfo
+    # ValidatorInfo represents extended validator information.
+    validatorInfo: ValidatorInfo
 }
 
 # StakerFlagFilter represents a filter type for stakers with the given flag.

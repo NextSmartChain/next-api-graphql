@@ -3,29 +3,29 @@ package types
 
 import "encoding/json"
 
-// StakerInfo holds extended staker information.
-type StakerInfo struct {
-	// Name represents the name of the staker
+// ValidatorInfo holds extended validator information.
+type ValidatorInfo struct {
+	// Name represents the name of the validator
 	Name *string `json:"name"`
 
-	// LogoUrl represents staker logo URL
+	// LogoUrl represents validator logo URL
 	LogoUrl *string `json:"logoUrl"`
 
-	// Website represents a link to staker website
+	// Website represents a link to validator website
 	Website *string `json:"website"`
 
-	// Contact represents a link to contact to the staker
+	// Contact represents a link to contact to the validator
 	Contact *string `json:"contact"`
 }
 
-// UnmarshalStakerInfo parses the JSON-encoded staker information data.
-func UnmarshalStakerInfo(data []byte) (*StakerInfo, error) {
-	var sti StakerInfo
-	err := json.Unmarshal(data, &sti)
-	return &sti, err
+// UnmarshalValidatorInfo parses the JSON-encoded validator information data.
+func UnmarshalValidatorInfo(data []byte) (*ValidatorInfo, error) {
+	var sfci ValidatorInfo
+	err := json.Unmarshal(data, &sfci)
+	return &sfci, err
 }
 
-// Marshal returns the JSON encoding of staker information.
-func (sti *StakerInfo) Marshal() ([]byte, error) {
-	return json.Marshal(sti)
+// Marshal returns the JSON encoding of validator information.
+func (sfci *ValidatorInfo) Marshal() ([]byte, error) {
+	return json.Marshal(sfci)
 }

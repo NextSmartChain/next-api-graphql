@@ -13,12 +13,9 @@ We strongly discourage opening Lachesis RPC interface for unrestricted Internet 
 */
 package rpc
 
-//go:generate tools/abigen.sh --abi ./contracts/abi/st_info.abi --pkg contracts --type StakerInfoContract --out ./contracts/staker_info.go
-
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
 	"fantom-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -31,14 +28,14 @@ import (
 	"time"
 )
 
-// stiRequestTimeout is number of seconds we wait for the staker information request to finish.
-const stiRequestTimeout = 5 * time.Second
+// requestTimeout is number of seconds we wait for the information request to finish.
+const requestTimeout = 5 * time.Second
 
-// stiNameCheckRegex is the expression used to check for staker name validity
+// nameCheckRegex is the expression used to check for validtor name validity
 var stiNameCheckRegex = regexp.MustCompile(`^[\w\d\s.\-_'$()]+$`)
 
-// StakerInfo extracts an extended staker information from smart contact by their id.
-func (ftm *FtmBridge) StakerInfo(id *hexutil.Big) (*types.StakerInfo, error) {
+// ValidatorInfo extracts extended information for a validator.
+func (ftm *FtmBridge) ValidatorInfo(id *hexutil.Big) (*types.ValidatorInfo, error) {
 	if id == nil {
 		return nil, fmt.Errorf("validator ID not given")
 	}
@@ -47,35 +44,28 @@ func (ftm *FtmBridge) StakerInfo(id *hexutil.Big) (*types.StakerInfo, error) {
 	ftm.log.Debugf("loading staker information for staker #%d", id.ToInt().Uint64())
 
 	// instantiate the contract and display its name
-	contract, err := contracts.NewStakerInfoContract(ftm.sfcConfig.StiContract, ftm.eth)
+	stUrl, err := ftm.SfcContract().GetValidatorInfo(nil, (*big.Int)(id))
 	if err != nil {
-		ftm.log.Criticalf("failed to instantiate STI contract: %v", err)
-		return nil, err
-	}
-
-	// call for data
-	stUrl, err := contract.GetInfo(nil, (*big.Int)(id))
-	if err != nil {
-		ftm.log.Errorf("failed to get the staker information: %v", err)
+		ftm.log.Errorf("failed to get the validator information: %v", err)
 		return nil, err
 	}
 
 	// var url string
 	if len(stUrl) == 0 {
-		ftm.log.Debugf("no information for staker #%d", id.ToInt().Uint64())
+		ftm.log.Debugf("no information for validator #%d", id.ToInt().Uint64())
 		return nil, nil
 	}
 
 	// try to download JSON for the info
-	return ftm.downloadStakerInfo(stUrl)
+	return ftm.downloadValidatorInfo(stUrl)
 }
 
-// downloadStakerInfo tries to download staker information from the given URL address.
-func (ftm *FtmBridge) downloadStakerInfo(stUrl string) (*types.StakerInfo, error) {
+// downloadValidatorInfo tries to download validator information from the given URL address.
+func (ftm *FtmBridge) downloadValidatorInfo(stUrl string) (*types.ValidatorInfo, error) {
 	var data []byte
 	// check for data url
 	if strings.HasPrefix(stUrl, "data:application/json;base64,") {
-		ftm.log.Debugf("using staker info address from dataUrl [%s]", stUrl)
+		ftm.log.Debugf("using validator info address from dataUrl [%s]", stUrl)
 
 		var err error
 		// extract base64 encoded json
@@ -85,84 +75,84 @@ func (ftm *FtmBridge) downloadStakerInfo(stUrl string) (*types.StakerInfo, error
 		}
 	} else {
 		// log what we are about to do
-		ftm.log.Debugf("downloading staker info address [%s]", stUrl)
+		ftm.log.Debugf("downloading validator info address [%s]", stUrl)
 
 		// make a http client
-		cl := http.Client{Timeout: stiRequestTimeout}
+		cl := http.Client{Timeout: requestTimeout}
 
 		// prep request
 		req, err := http.NewRequest(http.MethodGet, stUrl, nil)
 		if err != nil {
-			ftm.log.Errorf("can not request given staker info; %s", err.Error())
+			ftm.log.Errorf("can not request given validator info url; %s", err.Error())
 			return nil, err
 		}
 
 		// be honest, set agent
-		req.Header.Set("User-Agent", "Chain4Travel GraphQL API Server")
+		req.Header.Set("User-Agent", "Camino GraphQL API Server")
 
 		// process the request
 		res, err := cl.Do(req)
 		if err != nil {
-			ftm.log.Errorf("can not download staker info; %s", err.Error())
+			ftm.log.Errorf("can not download validator info; %s", err.Error())
 			return nil, err
 		}
 
 		// read the response
 		data, err = ioutil.ReadAll(res.Body)
 		if err != nil {
-			ftm.log.Errorf("can not read staker info response; %s", err.Error())
+			ftm.log.Errorf("can not read validator info response; %s", err.Error())
 			return nil, err
 		}
 	}
 
 	// try to parse
-	var info types.StakerInfo
+	var info types.ValidatorInfo
 	err := json.Unmarshal(data, &info)
 	if err != nil {
-		ftm.log.Errorf("invalid response for staker info; %s", err.Error())
+		ftm.log.Errorf("invalid response for validator info; %s", err.Error())
 		return nil, err
 	}
 
 	// do we have anything?
-	if !ftm.isValidStakerInfo(&info) {
-		ftm.log.Errorf("invalid response for staker info [%s]", stUrl)
+	if !ftm.isValidValidatorInfo(&info) {
+		ftm.log.Errorf("invalid response for validator info [%s]", stUrl)
 		return nil, err
 	}
 
-	ftm.log.Debugf("found staker [%s]", *info.Name)
+	ftm.log.Debugf("found validator [%s]", *info.Name)
 	return &info, nil
 }
 
-// isValidStakerInfo check if the staker information is valid and can be used.
-func (ftm *FtmBridge) isValidStakerInfo(info *types.StakerInfo) bool {
+// isValidValidatorInfo check if the validator information is valid and can be used.
+func (ftm *FtmBridge) isValidValidatorInfo(info *types.ValidatorInfo) bool {
 	// name must be available
 	if nil == info.Name || 0 == len(*info.Name) || !stiNameCheckRegex.Match([]byte(*info.Name)) {
-		ftm.log.Error("staker name not valid")
+		ftm.log.Error("validator name not valid")
 		return false
 	}
 
 	// check the logo URL
-	if !isValidStakerInfoUrl(info.LogoUrl, true) {
-		ftm.log.Error("staker logo URL not valid")
+	if !isValidValidatorInfoUrl(info.LogoUrl, true) {
+		ftm.log.Error("validator logo URL not valid")
 		return false
 	}
 
 	// check the website
-	if !isValidStakerInfoUrl(info.Website, false) {
-		ftm.log.Error("staker website URL not valid")
+	if !isValidValidatorInfoUrl(info.Website, false) {
+		ftm.log.Error("validator website URL not valid")
 		return false
 	}
 
 	// check the contact URL
-	if !isValidStakerInfoUrl(info.Contact, false) {
-		ftm.log.Error("staker contact URL not valid")
+	if !isValidValidatorInfoUrl(info.Contact, false) {
+		ftm.log.Error("validator contact URL not valid")
 		return false
 	}
 	return true
 }
 
-// isValidStakerInfoUrl validates the given URL address from the staker info.
-func isValidStakerInfoUrl(addr *string, reqHttps bool) bool {
+// isValidValidatorInfoUrl validates the given URL address from the validator info.
+func isValidValidatorInfoUrl(addr *string, reqHttps bool) bool {
 	// do we even have an URL; it's ok if not
 	if nil == addr || 0 == len(*addr) {
 		return true

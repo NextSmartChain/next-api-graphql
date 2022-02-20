@@ -1,14 +1,14 @@
-# StakerInfo represents extended staker information from smart contract.
-type StakerInfo {
-    "Name represents the name of the staker."
+# ValidatorInfo represents extended validator information.
+type ValidatorInfo {
+    "Name represents the name of the validator."
     name: String
 
-    "LogoUrl represents staker logo URL."
+    "LogoUrl represents validator logo URL."
     logoUrl: String
 
-    "Website represents a link to stakers website."
+    "Website represents a link to validators website."
     website: String
 
-    "Contact represents a link to contact to the staker."
+    "Contact represents a link to contact to the validator."
     contact: String
 }

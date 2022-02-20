@@ -15,36 +15,36 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
-// PullStakerInfo extracts an extended staker information from smart contact.
-func (p *proxy) PullStakerInfo(id *hexutil.Big) (*types.StakerInfo, error) {
+// PullValidatorInfo extracts an extended validator information from smart contact.
+func (p *proxy) PullValidatorInfo(id *hexutil.Big) (*types.ValidatorInfo, error) {
 	// retieve from rpc
-	info, err := p.rpc.StakerInfo(id)
+	info, err := p.rpc.ValidatorInfo(id)
 	if err != nil {
 		return nil, err
 	}
 	if info == nil {
-		info = new(types.StakerInfo)
-		p.StoreStakerInfo(id, info)
+		info = new(types.ValidatorInfo)
+		p.StoreValidatorInfo(id, info)
 	}
 	return info, nil
 }
 
-// StoreStakerInfo stores staker information to in-memory cache for future use.
-func (p *proxy) StoreStakerInfo(id *hexutil.Big, sti *types.StakerInfo) error {
+// StoreValidatorInfo stores validator information to in-memory cache for future use.
+func (p *proxy) StoreValidatorInfo(id *hexutil.Big, sti *types.ValidatorInfo) error {
 	// push to in-memory cache
-	err := p.cache.PushStakerInfo(id, sti)
+	err := p.cache.PushValidatorInfo(id, sti)
 	if err != nil {
-		p.log.Error("staker info can net be kept")
+		p.log.Error("validator info can net be kept")
 		return err
 	}
 	return nil
 }
 
-// RetrieveStakerInfo gets staker information from in-memory if available.
-func (p *proxy) RetrieveStakerInfo(id *hexutil.Big) *types.StakerInfo {
-	info := p.cache.PullStakerInfo(id)
+// RetrieveValidatorInfo gets validator information from in-memory if available.
+func (p *proxy) RetrieveValidatorInfo(id *hexutil.Big) *types.ValidatorInfo {
+	info := p.cache.PullValidatorInfo(id)
 	if info == nil {
-		if info, err := p.PullStakerInfo(id); err != nil || info.Name == nil {
+		if info, err := p.PullValidatorInfo(id); err != nil || info.Name == nil {
 			return nil
 		}
 	}

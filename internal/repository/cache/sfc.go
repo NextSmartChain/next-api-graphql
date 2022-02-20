@@ -3,6 +3,7 @@ package cache
 
 import (
 	"fantom-api-graphql/internal/types"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"math/big"
@@ -14,6 +15,8 @@ const (
 	sfcMaxDelegatedRatioKey = "sfc_dlr"
 	sfcConfigurationKey     = "sfc_cfg"
 	sfcValidatorAddress     = "val_adr"
+	sfcTotalStakedKey       = "staked_total"
+	sfcValidatorInfoPrefix  = "validator_info_"
 )
 
 // PullSfcMaxDelegatedRatio extract the ratio from cache, if possible.
@@ -116,4 +119,78 @@ func (b *MemBridge) PullValidatorAddress(valID *hexutil.Big) *common.Address {
 	}
 	adr := common.BytesToAddress(data)
 	return &adr
+}
+
+// sfciCacheKeyPrefix is the prefix used for cache key to store validator information.
+const sfciCacheKeyPrefix = "validator_info_"
+
+// sfciTotalStakedKey is the cache key used to store total staked amount
+const sfciTotalStakedKey = "staked_total"
+
+// PullValidatorInfo extracts validator information from the in-memory cache if available.
+func (b *MemBridge) PullValidatorInfo(id *hexutil.Big) *types.ValidatorInfo {
+	// try to get the account data from the cache
+	data, err := b.cache.Get(getValidatorInfoKey(id))
+	if err != nil {
+		// cache returns ErrEntryNotFound if the key does not exist
+		return nil
+	}
+
+	// do we have the data?
+	info, err := types.UnmarshalValidatorInfo(data)
+	if err != nil {
+		b.log.Criticalf("can not decode validator information data from in-memory cache; %s", err.Error())
+		return nil
+	}
+
+	return info
+}
+
+// PushValidatorInfo stores provided validator information in the in-memory cache.
+func (b *MemBridge) PushValidatorInfo(id *hexutil.Big, sfci *types.ValidatorInfo) error {
+	// encode account
+	data, err := sfci.Marshal()
+	if err != nil {
+		b.log.Criticalf("can not marshal validator information to JSON; %s", err.Error())
+		return err
+	}
+
+	// set the data to cache by block number
+	return b.cache.Set(getValidatorInfoKey(id), data)
+}
+
+// getPriceKeyBySymbol build a cache key for the given price symbol.
+func getValidatorInfoKey(id *hexutil.Big) string {
+	// use the builder to make the string
+	var sb strings.Builder
+
+	sb.WriteString(sfcValidatorInfoPrefix)
+	sb.WriteString(id.String())
+
+	return sb.String()
+}
+
+// PullTotalStaked extracts total staked amount from the in-memory cache if available.
+func (b *MemBridge) PullTotalStaked() *hexutil.Big {
+	// try to get the account data from the cache
+	data, err := b.cache.Get(sfcTotalStakedKey)
+	if err != nil {
+		return nil
+	}
+
+	// do we have the data?
+	val := new(big.Int).SetBytes(data)
+	return (*hexutil.Big)(val)
+}
+
+// PushTotalStaked stores provided total staked amount information in the in-memory cache.
+func (b *MemBridge) PushTotalStaked(amount *hexutil.Big) error {
+	// we must have the value
+	if amount == nil {
+		b.log.Criticalf("can not store invalid amount")
+		return fmt.Errorf("amount not provided")
+	}
+
+	// encode account
+	return b.cache.Set(sfcTotalStakedKey, amount.ToInt().Bytes())
 }
