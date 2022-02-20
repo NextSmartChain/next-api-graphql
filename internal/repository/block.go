@@ -182,7 +182,7 @@ func (p *proxy) pullBlocks(num *uint64, count int32, toPull int32, current *type
 	var err error
 
 	// loop to pull all the blocks requested
-	for i := int32(0); i < toPull; i++ {
+	for i := uint64(0); i < uint64(toPull) && i <= uint64(current.Number); i++ {
 		// do we have any next block waiting to be used?
 		if next != nil {
 			// update the list with the current pending block only if it's valid for the list
