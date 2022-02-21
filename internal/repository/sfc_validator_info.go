@@ -41,8 +41,11 @@ func (p *proxy) StoreValidatorInfo(id *hexutil.Big, sti *types.ValidatorInfo) er
 // RetrieveValidatorInfo gets validator information from in-memory if available.
 func (p *proxy) RetrieveValidatorInfo(id *hexutil.Big) *types.ValidatorInfo {
 	info := p.cache.PullValidatorInfo(id)
+	p.log.Debug("validator info from cache", "info", info)
 	if info == nil {
-		if info, err := p.UpdateValidatorInfo(id); err != nil || info.Name == nil {
+		var err error
+		if info, err = p.UpdateValidatorInfo(id); err != nil || info.Name == nil {
+			p.log.Debug("validator info from update", "info", info)
 			return nil
 		}
 	}
