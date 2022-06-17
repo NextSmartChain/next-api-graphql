@@ -1,19 +1,19 @@
 {
-  "app_name": "My GraphQL API for Opera MainNet",
+  "app_name": "My GraphQL API for NEXT Smart Chain MainNet",
   "me": {
     "address": "0xE8E2ab527D1fDbCe570B221977BB5c3f12dFa1DA",
     "pkey": "0xaa682338447d15ac4462d938716c120d085a0db81d3945b18017ae0788a121a7"
   },
   "server": {
-    "bind": "0.0.0.0:16761",
+    "bind": "0.0.0.0:3000",
     "peers": [],
-    "origin": "https://xapi.fantom.network",
+    "origin": "https://xapi.nextsmartchain.com",
     "cors_origins": ["*"],
     "write_timeout": 30,
     "resolver_timeout": 240
   },
   "node": {
-    "url": "/var/opera/mainnet/opera.ipc"
+    "url": "/var/next/mainnet/next.ipc"
   },
   "log": {
     "level": "Info"

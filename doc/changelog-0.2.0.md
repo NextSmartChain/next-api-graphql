@@ -1,7 +1,7 @@
 # Version 0.2.0 Change Log
-The version 0.2.0 reflects changes in the Lachesis API v.0.7.0-rc1 and changes in SFC contract v.2.0.2-rc1 deployed into the Fantom Opera main net on 8/2020.
+The version 0.2.0 reflects changes in the Next API v.0.7.0-rc1 and changes in SFC contract v.2.0.2-rc1 deployed into the NEXT Smart Chain main net on 6/2022.
 
-The API implementation follows changes in registering, processing and reporting of stake delegations. The new Lachesis and SFC version implements so called fluid staking model. Each delegator has ability to delegate multiple times from a single address. A delegation can be locked for a time period chosen by the delegator to gain better rewards for the delegation locked.
+The API implementation follows changes in registering, processing and reporting of stake delegations. The new Orion and SFC version implements so called fluid staking model. Each delegator has ability to delegate multiple times from a single address. A delegation can be locked for a time period chosen by the delegator to gain better rewards for the delegation locked.
 
 The original 1:1 relationship between network account address and delegation no longer applies and has been changed to 1:n relationship. All API endpoints working with the delegation reflect this change.
 

@@ -1,7 +1,7 @@
 # Bytes32 is a 32 byte binary string, represented by 0x prefixed hexadecimal hash.
 scalar Bytes32
 
-# Address is a 20 byte Opera address, represented as 0x prefixed hexadecimal number.
+# Address is a 20 byte NEXT address, represented as 0x prefixed hexadecimal number.
 scalar Address
 
 # BigInt is a large integer value. Input is accepted as either a JSON number,

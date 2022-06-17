@@ -2,7 +2,7 @@
 package cache
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"unsafe"
 )
 

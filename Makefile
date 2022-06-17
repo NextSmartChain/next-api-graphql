@@ -1,8 +1,8 @@
 # --------------------------------------------------------------------------
-# Makefile for the Fantom API GraphQL Server
+# Makefile for the NEXT API GraphQL Server
 #
 # v0.1 (2020/03/09)  - Initial version, base API server build.
-# (c) Fantom Foundation, 2020
+# (c) NEXT Foundation, 2022
 # --------------------------------------------------------------------------
 
 # project related vars
@@ -22,13 +22,13 @@ BUILD_COMMIT_TIME := $(shell git show --format="%cD" --no-patch)
 ## server: Make the API server as build/apiserver
 server:
 	go build \
-	-ldflags="-X 'fantom-api-graphql/cmd/apiserver/build.Version=$(APP_VERSION)' -X 'fantom-api-graphql/cmd/apiserver/build.Time=$(BUILD_DATE)' -X 'fantom-api-graphql/cmd/apiserver/build.Compiler=$(BUILD_COMPILER)' -X 'fantom-api-graphql/cmd/apiserver/build.Commit=$(BUILD_COMMIT)' -X 'fantom-api-graphql/cmd/apiserver/build.CommitTime=$(BUILD_COMMIT_TIME)'" \
+	-ldflags="-X 'next-api-graphql/cmd/apiserver/build.Version=$(APP_VERSION)' -X 'next-api-graphql/cmd/apiserver/build.Time=$(BUILD_DATE)' -X 'next-api-graphql/cmd/apiserver/build.Compiler=$(BUILD_COMPILER)' -X 'next-api-graphql/cmd/apiserver/build.Commit=$(BUILD_COMMIT)' -X 'next-api-graphql/cmd/apiserver/build.CommitTime=$(BUILD_COMMIT_TIME)'" \
 	-o $(GO_BIN)/apiserver \
 	./cmd/apiserver
 
 test:
 	go test \
-	-ldflags="-X 'fantom-api-graphql/cmd/apiserver/build.Version=$(APP_VERSION)' -X 'fantom-api-graphql/cmd/apiserver/build.Time=$(BUILD_DATE)' -X 'fantom-api-graphql/cmd/apiserver/build.Compiler=$(BUILD_COMPILER)' -X 'fantom-api-graphql/cmd/apiserver/build.Commit=$(BUILD_COMMIT)' -X 'fantom-api-graphql/cmd/apiserver/build.CommitTime=$(BUILD_COMMIT_TIME)'" \
+	-ldflags="-X 'next-api-graphql/cmd/apiserver/build.Version=$(APP_VERSION)' -X 'next-api-graphql/cmd/apiserver/build.Time=$(BUILD_DATE)' -X 'next-api-graphql/cmd/apiserver/build.Compiler=$(BUILD_COMPILER)' -X 'next-api-graphql/cmd/apiserver/build.Commit=$(BUILD_COMMIT)' -X 'next-api-graphql/cmd/apiserver/build.CommitTime=$(BUILD_COMMIT_TIME)'" \
 	./...
 
 .PHONY: help test

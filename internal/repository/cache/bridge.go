@@ -2,9 +2,9 @@
 package cache
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository/cache/ring"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository/cache/ring"
 	"github.com/allegro/bigcache"
 	"time"
 )

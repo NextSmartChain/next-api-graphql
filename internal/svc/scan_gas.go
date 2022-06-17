@@ -2,7 +2,7 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"math"
 	"math/big"
@@ -123,7 +123,7 @@ func (gps *gpsMonitor) execute() {
 	}
 }
 
-// read makes the reading on the current gas price suggestion from connected the Opera node.
+// read makes the reading on the current gas price suggestion from connected the NEXT node.
 func (gps *gpsMonitor) read() {
 	// get the current suggested gas price value
 	gs, err := repo.GasPrice()

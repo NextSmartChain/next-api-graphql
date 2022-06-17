@@ -270,12 +270,12 @@ func (_SfcTokenizer *SfcTokenizerCallerSession) IsOwner() (bool, error) {
 	return _SfcTokenizer.Contract.IsOwner(&_SfcTokenizer.CallOpts)
 }
 
-// OutstandingSFTM is a free data retrieval call binding the contract method 0x5b04f4c8.
+// OutstandingSNEXT is a free data retrieval call binding the contract method 0x5b04f4c8.
 //
-// Solidity: function outstandingSFTM(address , uint256 ) view returns(uint256)
-func (_SfcTokenizer *SfcTokenizerCaller) OutstandingSFTM(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
+// Solidity: function outstandingSNEXT(address , uint256 ) view returns(uint256)
+func (_SfcTokenizer *SfcTokenizerCaller) OutstandingSNEXT(opts *bind.CallOpts, arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _SfcTokenizer.contract.Call(opts, &out, "outstandingSFTM", arg0, arg1)
+	err := _SfcTokenizer.contract.Call(opts, &out, "outstandingSNEXT", arg0, arg1)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -287,18 +287,18 @@ func (_SfcTokenizer *SfcTokenizerCaller) OutstandingSFTM(opts *bind.CallOpts, ar
 
 }
 
-// OutstandingSFTM is a free data retrieval call binding the contract method 0x5b04f4c8.
+// OutstandingSNEXT is a free data retrieval call binding the contract method 0x5b04f4c8.
 //
-// Solidity: function outstandingSFTM(address , uint256 ) view returns(uint256)
-func (_SfcTokenizer *SfcTokenizerSession) OutstandingSFTM(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _SfcTokenizer.Contract.OutstandingSFTM(&_SfcTokenizer.CallOpts, arg0, arg1)
+// Solidity: function outstandingSNEXT(address , uint256 ) view returns(uint256)
+func (_SfcTokenizer *SfcTokenizerSession) OutstandingSNEXT(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
+	return _SfcTokenizer.Contract.OutstandingSNEXT(&_SfcTokenizer.CallOpts, arg0, arg1)
 }
 
-// OutstandingSFTM is a free data retrieval call binding the contract method 0x5b04f4c8.
+// OutstandingSNEXT is a free data retrieval call binding the contract method 0x5b04f4c8.
 //
-// Solidity: function outstandingSFTM(address , uint256 ) view returns(uint256)
-func (_SfcTokenizer *SfcTokenizerCallerSession) OutstandingSFTM(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
-	return _SfcTokenizer.Contract.OutstandingSFTM(&_SfcTokenizer.CallOpts, arg0, arg1)
+// Solidity: function outstandingSNEXT(address , uint256 ) view returns(uint256)
+func (_SfcTokenizer *SfcTokenizerCallerSession) OutstandingSNEXT(arg0 common.Address, arg1 *big.Int) (*big.Int, error) {
+	return _SfcTokenizer.Contract.OutstandingSNEXT(&_SfcTokenizer.CallOpts, arg0, arg1)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
@@ -332,12 +332,12 @@ func (_SfcTokenizer *SfcTokenizerCallerSession) Owner() (common.Address, error) 
 	return _SfcTokenizer.Contract.Owner(&_SfcTokenizer.CallOpts)
 }
 
-// SFTMTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
+// SNEXTTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
 //
-// Solidity: function sFTMTokenAddress() view returns(address)
-func (_SfcTokenizer *SfcTokenizerCaller) SFTMTokenAddress(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function sNEXTTokenAddress() view returns(address)
+func (_SfcTokenizer *SfcTokenizerCaller) SNEXTTokenAddress(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _SfcTokenizer.contract.Call(opts, &out, "sFTMTokenAddress")
+	err := _SfcTokenizer.contract.Call(opts, &out, "sNEXTTokenAddress")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -349,39 +349,39 @@ func (_SfcTokenizer *SfcTokenizerCaller) SFTMTokenAddress(opts *bind.CallOpts) (
 
 }
 
-// SFTMTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
+// SNEXTTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
 //
-// Solidity: function sFTMTokenAddress() view returns(address)
-func (_SfcTokenizer *SfcTokenizerSession) SFTMTokenAddress() (common.Address, error) {
-	return _SfcTokenizer.Contract.SFTMTokenAddress(&_SfcTokenizer.CallOpts)
+// Solidity: function sNEXTTokenAddress() view returns(address)
+func (_SfcTokenizer *SfcTokenizerSession) SNEXTTokenAddress() (common.Address, error) {
+	return _SfcTokenizer.Contract.SNEXTTokenAddress(&_SfcTokenizer.CallOpts)
 }
 
-// SFTMTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
+// SNEXTTokenAddress is a free data retrieval call binding the contract method 0x693c5e24.
 //
-// Solidity: function sFTMTokenAddress() view returns(address)
-func (_SfcTokenizer *SfcTokenizerCallerSession) SFTMTokenAddress() (common.Address, error) {
-	return _SfcTokenizer.Contract.SFTMTokenAddress(&_SfcTokenizer.CallOpts)
+// Solidity: function sNEXTTokenAddress() view returns(address)
+func (_SfcTokenizer *SfcTokenizerCallerSession) SNEXTTokenAddress() (common.Address, error) {
+	return _SfcTokenizer.Contract.SNEXTTokenAddress(&_SfcTokenizer.CallOpts)
 }
 
-// UpdateSFTMTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
+// UpdateSNEXTTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
 //
-// Solidity: function _updateSFTMTokenAddress(address addr) returns()
-func (_SfcTokenizer *SfcTokenizerTransactor) UpdateSFTMTokenAddress(opts *bind.TransactOpts, addr common.Address) (*types.Transaction, error) {
-	return _SfcTokenizer.contract.Transact(opts, "_updateSFTMTokenAddress", addr)
+// Solidity: function _updateSNEXTTokenAddress(address addr) returns()
+func (_SfcTokenizer *SfcTokenizerTransactor) UpdateSNEXTTokenAddress(opts *bind.TransactOpts, addr common.Address) (*types.Transaction, error) {
+	return _SfcTokenizer.contract.Transact(opts, "_updateSNEXTTokenAddress", addr)
 }
 
-// UpdateSFTMTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
+// UpdateSNEXTTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
 //
-// Solidity: function _updateSFTMTokenAddress(address addr) returns()
-func (_SfcTokenizer *SfcTokenizerSession) UpdateSFTMTokenAddress(addr common.Address) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.UpdateSFTMTokenAddress(&_SfcTokenizer.TransactOpts, addr)
+// Solidity: function _updateSNEXTTokenAddress(address addr) returns()
+func (_SfcTokenizer *SfcTokenizerSession) UpdateSNEXTTokenAddress(addr common.Address) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.UpdateSNEXTTokenAddress(&_SfcTokenizer.TransactOpts, addr)
 }
 
-// UpdateSFTMTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
+// UpdateSNEXTTokenAddress is a paid mutator transaction binding the contract method 0x06f03e22.
 //
-// Solidity: function _updateSFTMTokenAddress(address addr) returns()
-func (_SfcTokenizer *SfcTokenizerTransactorSession) UpdateSFTMTokenAddress(addr common.Address) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.UpdateSFTMTokenAddress(&_SfcTokenizer.TransactOpts, addr)
+// Solidity: function _updateSNEXTTokenAddress(address addr) returns()
+func (_SfcTokenizer *SfcTokenizerTransactorSession) UpdateSNEXTTokenAddress(addr common.Address) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.UpdateSNEXTTokenAddress(&_SfcTokenizer.TransactOpts, addr)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0x8129fc1c.
@@ -405,46 +405,46 @@ func (_SfcTokenizer *SfcTokenizerTransactorSession) Initialize() (*types.Transac
 	return _SfcTokenizer.Contract.Initialize(&_SfcTokenizer.TransactOpts)
 }
 
-// MintSFTM is a paid mutator transaction binding the contract method 0xca2d6fd8.
+// MintSNEXT is a paid mutator transaction binding the contract method 0xca2d6fd8.
 //
-// Solidity: function mintSFTM(uint256 toStakerID) returns()
-func (_SfcTokenizer *SfcTokenizerTransactor) MintSFTM(opts *bind.TransactOpts, toStakerID *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.contract.Transact(opts, "mintSFTM", toStakerID)
+// Solidity: function mintSNEXT(uint256 toStakerID) returns()
+func (_SfcTokenizer *SfcTokenizerTransactor) MintSNEXT(opts *bind.TransactOpts, toStakerID *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.contract.Transact(opts, "mintSNEXT", toStakerID)
 }
 
-// MintSFTM is a paid mutator transaction binding the contract method 0xca2d6fd8.
+// MintSNEXT is a paid mutator transaction binding the contract method 0xca2d6fd8.
 //
-// Solidity: function mintSFTM(uint256 toStakerID) returns()
-func (_SfcTokenizer *SfcTokenizerSession) MintSFTM(toStakerID *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.MintSFTM(&_SfcTokenizer.TransactOpts, toStakerID)
+// Solidity: function mintSNEXT(uint256 toStakerID) returns()
+func (_SfcTokenizer *SfcTokenizerSession) MintSNEXT(toStakerID *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.MintSNEXT(&_SfcTokenizer.TransactOpts, toStakerID)
 }
 
-// MintSFTM is a paid mutator transaction binding the contract method 0xca2d6fd8.
+// MintSNEXT is a paid mutator transaction binding the contract method 0xca2d6fd8.
 //
-// Solidity: function mintSFTM(uint256 toStakerID) returns()
-func (_SfcTokenizer *SfcTokenizerTransactorSession) MintSFTM(toStakerID *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.MintSFTM(&_SfcTokenizer.TransactOpts, toStakerID)
+// Solidity: function mintSNEXT(uint256 toStakerID) returns()
+func (_SfcTokenizer *SfcTokenizerTransactorSession) MintSNEXT(toStakerID *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.MintSNEXT(&_SfcTokenizer.TransactOpts, toStakerID)
 }
 
-// RedeemSFTM is a paid mutator transaction binding the contract method 0x4a37ec9d.
+// RedeemSNEXT is a paid mutator transaction binding the contract method 0x4a37ec9d.
 //
-// Solidity: function redeemSFTM(uint256 stakerID, uint256 amount) returns()
-func (_SfcTokenizer *SfcTokenizerTransactor) RedeemSFTM(opts *bind.TransactOpts, stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.contract.Transact(opts, "redeemSFTM", stakerID, amount)
+// Solidity: function redeemSNEXT(uint256 stakerID, uint256 amount) returns()
+func (_SfcTokenizer *SfcTokenizerTransactor) RedeemSNEXT(opts *bind.TransactOpts, stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.contract.Transact(opts, "redeemSNEXT", stakerID, amount)
 }
 
-// RedeemSFTM is a paid mutator transaction binding the contract method 0x4a37ec9d.
+// RedeemSNEXT is a paid mutator transaction binding the contract method 0x4a37ec9d.
 //
-// Solidity: function redeemSFTM(uint256 stakerID, uint256 amount) returns()
-func (_SfcTokenizer *SfcTokenizerSession) RedeemSFTM(stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.RedeemSFTM(&_SfcTokenizer.TransactOpts, stakerID, amount)
+// Solidity: function redeemSNEXT(uint256 stakerID, uint256 amount) returns()
+func (_SfcTokenizer *SfcTokenizerSession) RedeemSNEXT(stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.RedeemSNEXT(&_SfcTokenizer.TransactOpts, stakerID, amount)
 }
 
-// RedeemSFTM is a paid mutator transaction binding the contract method 0x4a37ec9d.
+// RedeemSNEXT is a paid mutator transaction binding the contract method 0x4a37ec9d.
 //
-// Solidity: function redeemSFTM(uint256 stakerID, uint256 amount) returns()
-func (_SfcTokenizer *SfcTokenizerTransactorSession) RedeemSFTM(stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
-	return _SfcTokenizer.Contract.RedeemSFTM(&_SfcTokenizer.TransactOpts, stakerID, amount)
+// Solidity: function redeemSNEXT(uint256 stakerID, uint256 amount) returns()
+func (_SfcTokenizer *SfcTokenizerTransactorSession) RedeemSNEXT(stakerID *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _SfcTokenizer.Contract.RedeemSNEXT(&_SfcTokenizer.TransactOpts, stakerID, amount)
 }
 
 // RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.

@@ -2,7 +2,7 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/repository"
 )
 
 // Erc1155ContractList resolves a list of ERC1155 multi-token contracts.

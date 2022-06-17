@@ -330,7 +330,7 @@ type ListPageInfo {
     # HasNext specifies if there is another edge before the first one.
     hasPrevious: Boolean!
 }
-# Transaction is an Opera block chain transaction.
+# Transaction is an NEXT block chain transaction.
 type Transaction {
     # Hash is the unique hash of this transaction.
     hash: Bytes32!
@@ -415,7 +415,7 @@ type Transaction {
     erc1155Transactions: [ERC1155Transaction!]!
 }
 
-# Block is an Opera block chain block.
+# Block is an NEXT block chain block.
 type Block {
     # Number is the number of this block, starting at 0 for the genesis block.
     number: Long!
@@ -570,7 +570,7 @@ type DelegationListEdge {
     delegation: Delegation!
 }
 
-# Delegation represents a delegation on Opera block chain.
+# Delegation represents a delegation on NEXT block chain.
 type Delegation {
     # Address of the delegator account.
     address: Address!
@@ -640,7 +640,7 @@ type Delegation {
 
     # outstandingSNative represents the amount of sNative tokens representing
     # the tokenized stake minted and un-repaid on this delegation.
-    outstandingSFTM: BigInt!
+    outstandingSNEXT: BigInt!
 
     # tokenizerAllowedToWithdraw indicates if the stake tokenizer allows the stake
     # to be withdrawn. That means all the sNative tokens have been repaid and the sNative
@@ -838,7 +838,7 @@ type ERC20TransactionListEdge {
 # Bytes32 is a 32 byte binary string, represented by 0x prefixed hexadecimal hash.
 scalar Bytes32
 
-# Address is a 20 byte Opera address, represented as 0x prefixed hexadecimal number.
+# Address is a 20 byte NEXT address, represented as 0x prefixed hexadecimal number.
 scalar Address
 
 # BigInt is a large integer value. Input is accepted as either a JSON number,
@@ -1226,7 +1226,7 @@ type EstimatedRewards {
     # un-delegations and also skips offline self-staking and flagged staking.
     totalStaked: BigInt!
 
-    # Information about the last sealed epoch of the Opera blockchain.
+    # Information about the last sealed epoch of the NEXT blockchain.
     # The epoch provides useful information about total native token supply,
     # total amount staked, rewards rate and weight, fee, etc.
     lastEpoch: Epoch!
@@ -1551,7 +1551,7 @@ type RewardClaim {
     # to be processed and granted.
     trxHash: Bytes32!
 }
-# Price represents price information of core Opera token
+# Price represents price information of core NEXT token
 type Price {
     "Source unit symbol."
     fromSymbol: String!
@@ -1719,6 +1719,10 @@ type TokenTransaction {
 
     # tokenType represents the type of the token (i.e. ERC20/ERC721/ERC1155).
     tokenType: String!
+
+    # tokenDecimals is the number of decimals the token supports.
+    # The most common value is 18 to mimic the ETH to WEI relationship.
+    tokenDecimals: Int!
 
     # type represents the type of the transaction executed (i.e. Transfer/Mint/Approval).
     type: String!
@@ -2029,7 +2033,7 @@ type Query {
     # of the SFC contract managing the block chain staking economy.
     sfcConfig: SfcConfig!
 
-    # Total number of accounts active on the Opera blockchain.
+    # Total number of accounts active on the NEXT blockchain.
     accountsActive:Long!
 
     # Get an Account information by hash address.
@@ -2074,7 +2078,7 @@ type Query {
     # Get filtered list of ERC1155 Transactions.
     erc1155Transactions(cursor:Cursor, count:Int = 25, token: Address, tokenId: BigInt, account: Address, txType: String): ERC1155TransactionList!
 
-    # Get the id of the current epoch of the Opera blockchain.
+    # Get the id of the current epoch of the NEXT blockchain.
     currentEpoch:Long!
 
     # Get information about specified epoch. Returns current epoch information
@@ -2084,10 +2088,10 @@ type Query {
     # Get a scrollable list of epochs sorted from the last one back by default.
     epochs(cursor: Cursor, count: Int = 25): EpochList!
 
-    # The last staker id in Opera blockchain.
+    # The last staker id in NEXT blockchain.
     lastStakerId: Long!
 
-    # The number of stakers in Opera blockchain.
+    # The number of stakers in NEXT blockchain.
     stakersNum: Long!
 
     # Staker information. The staker is loaded either by numeric ID,
@@ -2121,7 +2125,7 @@ type Query {
     # for the transaction described by the parameters of the call.
     estimateGas(from: Address, to: Address, value: BigInt, data: String): Long
 
-    # Get price details of the Opera blockchain token for the given target symbols.
+    # Get price details of the NEXT blockchain token for the given target symbols.
     price(to:String!):Price!
 
     # Get calculated staking rewards for an account or given
@@ -2158,7 +2162,7 @@ type Query {
     fMintUserTokens(purpose:FMintUserTokenPurpose=FMINT_COLLATERAL):[FMintUserToken!]!
 
     # defiUniswapPairs represents a list of all pairs managed
-    # by the Uniswap Core contract on Opera blockchain.
+    # by the Uniswap Core contract on NEXT blockchain.
     defiUniswapPairs: [UniswapPair!]!
 
     # defiUniswapAmountsOut calculates the expected output amounts

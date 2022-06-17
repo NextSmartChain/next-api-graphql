@@ -3,7 +3,7 @@ package resolvers
 
 import (
 	"context"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"time"
 )
 

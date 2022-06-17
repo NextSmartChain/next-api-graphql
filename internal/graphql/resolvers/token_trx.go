@@ -1,8 +1,8 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
@@ -54,6 +54,19 @@ func (ttx *TokenTransaction) TokenSymbol() (sym string, err error) {
 		sym, err = repository.R().Erc721Symbol(&ttx.TokenTransaction.TokenAddress)
 	default:
 		sym, err = "", nil
+	}
+	return
+}
+
+// TokenDecimals resolves the amount of decimals of the ERC token contract, if available.
+func (ttx *TokenTransaction) TokenDecimals() (decimals int32, err error) {
+	switch ttx.TokenTransaction.TokenType {
+	case types.AccountTypeERC20Token:
+		decimals, err = repository.R().Erc20Decimals(&ttx.TokenTransaction.TokenAddress)
+	case types.AccountTypeERC721Contract:
+		decimals = 0
+	default:
+		decimals = 0
 	}
 	return
 }

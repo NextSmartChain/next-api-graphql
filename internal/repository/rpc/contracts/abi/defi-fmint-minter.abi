@@ -424,7 +424,7 @@
       "name": "addressProvider",
       "outputs": [
         {
-          "internalType": "contract IFantomMintAddressProvider",
+          "internalType": "contract INEXTMintAddressProvider",
           "name": "",
           "type": "address"
         }
@@ -1232,7 +1232,7 @@
       "name": "getCollateralPool",
       "outputs": [
         {
-          "internalType": "contract IFantomDeFiTokenStorage",
+          "internalType": "contract INEXTDeFiTokenStorage",
           "name": "",
           "type": "address"
         }
@@ -1247,7 +1247,7 @@
       "name": "getDebtPool",
       "outputs": [
         {
-          "internalType": "contract IFantomDeFiTokenStorage",
+          "internalType": "contract INEXTDeFiTokenStorage",
           "name": "",
           "type": "address"
         }

@@ -2,18 +2,18 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/repository"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"math/big"
 )
 
-// CurrentEpoch resolves the id of the current epoch of the Opera blockchain.
+// CurrentEpoch resolves the id of the current epoch of the NEXT blockchain.
 func (rs *rootResolver) CurrentEpoch() (hexutil.Uint64, error) {
 	return repository.R().CurrentEpoch()
 }
 
-// LastStakerId resolves the last staker id in Opera blockchain.
+// LastStakerId resolves the last staker id in NEXT blockchain.
 func (rs *rootResolver) LastStakerId() (hexutil.Uint64, error) {
 	val, err := repository.R().LastValidatorId()
 	if err != nil {
@@ -22,7 +22,7 @@ func (rs *rootResolver) LastStakerId() (hexutil.Uint64, error) {
 	return hexutil.Uint64(val), nil
 }
 
-// StakersNum resolves the number of stakers in Opera blockchain.
+// StakersNum resolves the number of stakers in NEXT blockchain.
 func (rs *rootResolver) StakersNum() (hexutil.Uint64, error) {
 	val, err := repository.R().ValidatorsCount()
 	if err != nil {

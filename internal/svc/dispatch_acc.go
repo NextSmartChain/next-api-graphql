@@ -2,8 +2,8 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 )

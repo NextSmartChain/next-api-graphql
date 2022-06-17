@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"fantom-api-graphql/internal/config"
+	"next-api-graphql/internal/config"
 	"github.com/op/go-logging"
 	"os"
 )

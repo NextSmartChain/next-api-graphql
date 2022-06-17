@@ -3,7 +3,7 @@ package db
 
 import (
 	"context"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

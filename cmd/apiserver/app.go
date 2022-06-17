@@ -2,13 +2,13 @@
 package main
 
 import (
-	"fantom-api-graphql/cmd/apiserver/build"
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/graphql/resolvers"
-	"fantom-api-graphql/internal/handlers"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository"
-	"fantom-api-graphql/internal/svc"
+	"next-api-graphql/cmd/apiserver/build"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/graphql/resolvers"
+	"next-api-graphql/internal/handlers"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository"
+	"next-api-graphql/internal/svc"
 	"flag"
 	"log"
 	"net/http"
@@ -70,7 +70,7 @@ func (app *apiServer) run() {
 	svc.Manager().Run()
 
 	// start responding to requests
-	app.log.Infof("welcome to Fantom GraphQL API server")
+	app.log.Infof("welcome to NEXT Smart Chain GraphQL API server")
 	app.log.Infof("listening for requests on %s", app.cfg.Server.BindAddress)
 
 	// listen the interface

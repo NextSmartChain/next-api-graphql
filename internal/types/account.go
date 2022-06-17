@@ -27,7 +27,7 @@ const (
 	AccountTypeERC1155Contract = "ERC1155"
 )
 
-// Account represents an Opera account at the blockchain.
+// Account represents an NEXT account at the blockchain.
 type Account struct {
 	Address      common.Address `json:"address"`
 	ContractTx   *common.Hash   `json:"contract"`

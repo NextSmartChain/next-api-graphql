@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Contract represents an Opera smart contract at the blockchain.
+// Contract represents an NEXT smart contract at the blockchain.
 type Contract struct {
 	// Type represents a general type of the contract.
 	Type string `json:"type"`
@@ -146,10 +146,10 @@ func NewSfcContract(addr *common.Address, ver uint64, name, abi string, block *B
 		string([]byte{byte((ver >> 16) & 255)}),
 		string([]byte{byte((ver >> 8) & 255)}),
 		string([]byte{byte(ver & 255)}))
-	con.SupportContact = "https://fantom.foundation"
+	con.SupportContact = "https://nextsmartchain.com"
 	con.License = "MIT"
 	con.Compiler = "Solidity"
-	con.SourceCode = "https://github.com/Fantom-foundation/opera-sfc"
+	con.SourceCode = "https://github.com/NextSmartChain/next-sfc"
 	con.Abi = abi
 	con.Validated = &block.TimeStamp
 	return con

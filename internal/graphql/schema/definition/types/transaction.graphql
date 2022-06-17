@@ -1,4 +1,4 @@
-# Transaction is an Opera block chain transaction.
+# Transaction is an NEXT block chain transaction.
 type Transaction {
     # Hash is the unique hash of this transaction.
     hash: Bytes32!

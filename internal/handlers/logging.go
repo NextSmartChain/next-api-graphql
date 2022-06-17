@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	flogger "fantom-api-graphql/internal/logger"
+	flogger "next-api-graphql/internal/logger"
 	"net/http"
 )
 

@@ -2,8 +2,8 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/repository"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"sync"
 )

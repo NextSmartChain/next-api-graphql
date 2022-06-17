@@ -36,7 +36,7 @@ const (
 	keyLoggingFormat = "log.format"
 
 	// node connection related options
-	keyOperaUrl = "opera.url"
+	keyNextUrl = "next.url"
 
 	// off-chain database related options
 	keyMongoUrl      = "db.url"

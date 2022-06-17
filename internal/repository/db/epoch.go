@@ -3,7 +3,7 @@ package db
 
 import (
 	"context"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"go.mongodb.org/mongo-driver/bson"

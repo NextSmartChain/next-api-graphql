@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -16,7 +16,7 @@ package rpc
 //go:generate tools/abigen.sh --abi ./contracts/abi/defi-fmint-minter.abi --pkg contracts --type DefiFMintMinter --out ./contracts/fmint_minter.go
 
 import (
-	"fantom-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/repository/rpc/contracts"
 	"github.com/ethereum/go-ethereum/common"
 	"golang.org/x/sync/singleflight"
 	"sync"
@@ -24,7 +24,7 @@ import (
 
 // identifiers of fMint contracts we may want to get
 const (
-	fMintAddressMinter             = "fantom_mint"
+	fMintAddressMinter             = "next_mint"
 	fMintAddressPriceOracleProxy   = "price_oracle_proxy"
 	fMintAddressRewardDistribution = "reward_distribution"
 	fMintAddressTokenRegistry      = "token_registry"
@@ -35,7 +35,7 @@ const (
 // fMintConfig represents the configuration for DeFi fMint module.
 type fMintConfig struct {
 	// bridge represents the reference to the instantiated RPC bridge
-	bridge *FtmBridge
+	bridge *NextBridge
 
 	// AddressProvider represents the address
 	// of the fMint Address Provider contract

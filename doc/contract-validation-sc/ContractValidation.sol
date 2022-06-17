@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-// @title Fantom deployed smart contract validation service.
+// @title NEXT Smart Chain deployed smart contract validation service.
 contract ContractValidation {
     // ValidatedContract structure represents an information about deployed
     // smart contract, validated through one of our API nodes.

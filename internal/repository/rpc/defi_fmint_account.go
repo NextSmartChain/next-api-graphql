@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -19,8 +19,8 @@ package rpc
 
 import (
 	"context"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -33,26 +33,26 @@ import (
 const fMintRewardsPushTimeBarrier = time.Duration(-70) * time.Minute
 
 // FMintAccount loads details of a DeFi/fMint protocol account identified by the owner address.
-func (ftm *FtmBridge) FMintAccount(owner *common.Address) (*types.FMintAccount, error) {
+func (next *NextBridge) FMintAccount(owner *common.Address) (*types.FMintAccount, error) {
 	// make the container
 	var err error
 	da := types.FMintAccount{Address: *owner}
 
 	// load list of collateral tokens
-	tokenList, err := ftm.DefiTokenList()
+	tokenList, err := next.DefiTokenList()
 	if err != nil {
-		ftm.log.Errorf("collateral tokens list loader failed; %s", err.Error())
+		next.log.Errorf("collateral tokens list loader failed; %s", err.Error())
 		return nil, err
 	}
 
 	// debt tokens are the same
-	da.CollateralList = ftm.FMintFilterTokens(owner, tokenList, types.DefiTokenTypeCollateral)
-	da.DebtList = ftm.FMintFilterTokens(owner, tokenList, types.DefiTokenTypeDebt)
+	da.CollateralList = next.FMintFilterTokens(owner, tokenList, types.DefiTokenTypeCollateral)
+	da.DebtList = next.FMintFilterTokens(owner, tokenList, types.DefiTokenTypeDebt)
 
 	// get the current values of the account tokens on both collateral and debt
-	da.CollateralValue, da.DebtValue, err = ftm.fMintAccountValue(*owner)
+	da.CollateralValue, da.DebtValue, err = next.fMintAccountValue(*owner)
 	if err != nil {
-		ftm.log.Errorf("can not pull account tokens value; %s", err.Error())
+		next.log.Errorf("can not pull account tokens value; %s", err.Error())
 		return nil, err
 	}
 
@@ -61,13 +61,13 @@ func (ftm *FtmBridge) FMintAccount(owner *common.Address) (*types.FMintAccount, 
 }
 
 // FMintFilterTokens filter list of tokens to include only tokens with a balance of given type.
-func (ftm *FtmBridge) FMintFilterTokens(owner *common.Address, list []common.Address, tp types.DefiTokenType) []common.Address {
+func (next *NextBridge) FMintFilterTokens(owner *common.Address, list []common.Address, tp types.DefiTokenType) []common.Address {
 	zero := new(big.Int)
 	result := make([]common.Address, 0)
 	for _, adr := range list {
-		val, err := ftm.FMintTokenBalance(owner, &adr, tp)
+		val, err := next.FMintTokenBalance(owner, &adr, tp)
 		if err != nil {
-			ftm.log.Errorf("failed to get the token balance; %s", err.Error())
+			next.log.Errorf("failed to get the token balance; %s", err.Error())
 			continue
 		}
 
@@ -79,17 +79,17 @@ func (ftm *FtmBridge) FMintFilterTokens(owner *common.Address, list []common.Add
 }
 
 // FMintPoolBalance loads balance of an fMint token from the given pool contract.
-func (ftm *FtmBridge) FMintPoolBalance(pool *contracts.DeFiTokenStorage, owner *common.Address, token *common.Address) (hexutil.Big, error) {
+func (next *NextBridge) FMintPoolBalance(pool *contracts.DeFiTokenStorage, owner *common.Address, token *common.Address) (hexutil.Big, error) {
 	// get the collateral token balance
 	val, err := pool.BalanceOf(nil, *owner, *token)
 	if err != nil {
-		ftm.log.Debugf("pool balance failed on token %s, account %s; %s", token.String(), owner.String(), err.Error())
+		next.log.Debugf("pool balance failed on token %s, account %s; %s", token.String(), owner.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// do we have a value?
 	if val == nil {
-		ftm.log.Debugf("token %s balance not available for owner %s", token.String(), owner.String())
+		next.log.Debugf("token %s balance not available for owner %s", token.String(), owner.String())
 		return hexutil.Big{}, nil
 	}
 
@@ -97,68 +97,68 @@ func (ftm *FtmBridge) FMintPoolBalance(pool *contracts.DeFiTokenStorage, owner *
 }
 
 // FMintTokenBalance loads balance of a single DeFi token in fMint contract by its address.
-func (ftm *FtmBridge) FMintTokenBalance(owner *common.Address, token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
+func (next *NextBridge) FMintTokenBalance(owner *common.Address, token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
 	var err error
 	var pool *contracts.DeFiTokenStorage
 
 	// pull the right value based to token type
 	switch tp {
 	case types.DefiTokenTypeCollateral:
-		pool, err = ftm.fMintCfg.fMintCollateralPool()
+		pool, err = next.fMintCfg.fMintCollateralPool()
 	case types.DefiTokenTypeDebt:
-		pool, err = ftm.fMintCfg.fMintDebtPool()
+		pool, err = next.fMintCfg.fMintDebtPool()
 	}
 
 	// error in pool loading?
 	if err != nil {
-		ftm.log.Debugf("token storage pool failed to load; %s", err.Error())
+		next.log.Debugf("token storage pool failed to load; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// do we have the pool?
 	if pool == nil {
-		ftm.log.Debugf("token storage pool not available")
+		next.log.Debugf("token storage pool not available")
 		return hexutil.Big{}, nil
 	}
 
-	return ftm.FMintPoolBalance(pool, owner, token)
+	return next.FMintPoolBalance(pool, owner, token)
 }
 
 // FMintTokenTotalBalance loads total balance of a single DeFi token by it's address.
-func (ftm *FtmBridge) FMintTokenTotalBalance(token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
+func (next *NextBridge) FMintTokenTotalBalance(token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
 	var err error
 	var pool *contracts.DeFiTokenStorage
 
 	// pull the right value based to token type
 	switch tp {
 	case types.DefiTokenTypeCollateral:
-		pool, err = ftm.fMintCfg.fMintCollateralPool()
+		pool, err = next.fMintCfg.fMintCollateralPool()
 	case types.DefiTokenTypeDebt:
-		pool, err = ftm.fMintCfg.fMintDebtPool()
+		pool, err = next.fMintCfg.fMintDebtPool()
 	}
 
 	// error in pool loading?
 	if err != nil {
-		ftm.log.Debugf("token storage pool failed to load; %s", err.Error())
+		next.log.Debugf("token storage pool failed to load; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// do we have the pool?
 	if pool == nil {
-		ftm.log.Debugf("token storage pool not available")
+		next.log.Debugf("token storage pool not available")
 		return hexutil.Big{}, nil
 	}
 
 	// get the collateral token balance
 	val, err := pool.TotalBalance(nil, *token)
 	if err != nil {
-		ftm.log.Debugf("pool total balance failed on token %s", token.String(), err.Error())
+		next.log.Debugf("pool total balance failed on token %s", token.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// do we have a value?
 	if val == nil {
-		ftm.log.Debugf("token %s total balance not available", token.String())
+		next.log.Debugf("token %s total balance not available", token.String())
 		return hexutil.Big{}, nil
 	}
 
@@ -166,18 +166,18 @@ func (ftm *FtmBridge) FMintTokenTotalBalance(token *common.Address, tp types.Def
 }
 
 // FMintTokenValue loads value of a single DeFi token by it's address in fUSD.
-func (ftm *FtmBridge) FMintTokenValue(owner *common.Address, token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
+func (next *NextBridge) FMintTokenValue(owner *common.Address, token *common.Address, tp types.DefiTokenType) (hexutil.Big, error) {
 	// get the balance
-	balance, err := ftm.FMintTokenBalance(owner, token, tp)
+	balance, err := next.FMintTokenBalance(owner, token, tp)
 	if err != nil {
-		ftm.log.Errorf("token %s balance unknown; %s", token.String(), err.Error())
+		next.log.Errorf("token %s balance unknown; %s", token.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// get the price for the given token from oracle
-	val, err := ftm.FMintTokenPrice(token)
+	val, err := next.FMintTokenPrice(token)
 	if err != nil {
-		ftm.log.Errorf("token %s price not available; %s", token.String(), err.Error())
+		next.log.Errorf("token %s price not available; %s", token.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
@@ -187,9 +187,9 @@ func (ftm *FtmBridge) FMintTokenValue(owner *common.Address, token *common.Addre
 }
 
 // FMintTokenPrice loads the current price of the given token from on-chain price oracle.
-func (ftm *FtmBridge) FMintTokenPrice(token *common.Address) (hexutil.Big, error) {
+func (next *NextBridge) FMintTokenPrice(token *common.Address) (hexutil.Big, error) {
 	// get the price oracle address
-	oracle, err := ftm.fMintCfg.priceOracleProxyContract()
+	oracle, err := next.fMintCfg.priceOracleProxyContract()
 	if err != nil {
 		return hexutil.Big{}, err
 	}
@@ -197,13 +197,13 @@ func (ftm *FtmBridge) FMintTokenPrice(token *common.Address) (hexutil.Big, error
 	// get the price for the given token from oracle
 	val, err := oracle.GetPrice(nil, *token)
 	if err != nil {
-		ftm.log.Errorf("price not available for token %s; %s", token.String(), err.Error())
+		next.log.Errorf("price not available for token %s; %s", token.String(), err.Error())
 		return hexutil.Big{}, nil
 	}
 
 	// do we have the value?
 	if val == nil {
-		ftm.log.Debugf("token %s has no value", token.String())
+		next.log.Debugf("token %s has no value", token.String())
 		return hexutil.Big{}, nil
 	}
 
@@ -211,9 +211,9 @@ func (ftm *FtmBridge) FMintTokenPrice(token *common.Address) (hexutil.Big, error
 }
 
 // fMintAccountTokensValue loads total value status of a given fMint account.
-func (ftm *FtmBridge) fMintAccountValue(owner common.Address) (hexutil.Big, hexutil.Big, error) {
+func (next *NextBridge) fMintAccountValue(owner common.Address) (hexutil.Big, hexutil.Big, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintMinterContract()
+	contract, err := next.fMintCfg.fMintMinterContract()
 	if err != nil {
 		return hexutil.Big{}, hexutil.Big{}, err
 	}
@@ -221,14 +221,14 @@ func (ftm *FtmBridge) fMintAccountValue(owner common.Address) (hexutil.Big, hexu
 	// get joined collateral value
 	cValue, err := contract.CollateralValueOf(nil, owner, common.Address{}, new(big.Int))
 	if err != nil {
-		ftm.log.Errorf("joined collateral value loader failed")
+		next.log.Errorf("joined collateral value loader failed")
 		return hexutil.Big{}, hexutil.Big{}, err
 	}
 
 	// get joined debt value
 	dValue, err := contract.DebtValueOf(nil, owner, common.Address{}, new(big.Int))
 	if err != nil {
-		ftm.log.Errorf("joined debt value loader failed")
+		next.log.Errorf("joined debt value loader failed")
 		return hexutil.Big{}, hexutil.Big{}, err
 	}
 
@@ -238,15 +238,15 @@ func (ftm *FtmBridge) fMintAccountValue(owner common.Address) (hexutil.Big, hexu
 
 // FMintRewardsEarned resolves the total amount of rewards
 // accumulated on the account for the excessive collateral deposits.
-func (ftm *FtmBridge) FMintRewardsEarned(addr *common.Address) (hexutil.Big, error) {
+func (next *NextBridge) FMintRewardsEarned(addr *common.Address) (hexutil.Big, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintRewardsDistribution()
+	contract, err := next.fMintCfg.fMintRewardsDistribution()
 	if err != nil {
 		return hexutil.Big{}, err
 	}
 
 	// get the block height
-	bl, err := ftm.BlockHeight()
+	bl, err := next.BlockHeight()
 	if err != nil {
 		return hexutil.Big{}, err
 	}
@@ -263,7 +263,7 @@ func (ftm *FtmBridge) FMintRewardsEarned(addr *common.Address) (hexutil.Big, err
 	// get the rewards
 	rw, err := contract.RewardEarned(&co, *addr)
 	if err != nil {
-		ftm.log.Errorf("can not calculate earned rewards; %s", err.Error())
+		next.log.Errorf("can not calculate earned rewards; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
@@ -272,9 +272,9 @@ func (ftm *FtmBridge) FMintRewardsEarned(addr *common.Address) (hexutil.Big, err
 
 // FMintRewardsStashed resolves the total amount of rewards
 // accumulated on the account for the excessive collateral deposits.
-func (ftm *FtmBridge) FMintRewardsStashed(addr *common.Address) (hexutil.Big, error) {
+func (next *NextBridge) FMintRewardsStashed(addr *common.Address) (hexutil.Big, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintRewardsDistribution()
+	contract, err := next.fMintCfg.fMintRewardsDistribution()
 	if err != nil {
 		return hexutil.Big{}, err
 	}
@@ -282,7 +282,7 @@ func (ftm *FtmBridge) FMintRewardsStashed(addr *common.Address) (hexutil.Big, er
 	// get the rewards
 	rw, err := contract.RewardStash(nil, *addr)
 	if err != nil {
-		ftm.log.Errorf("can not calculate stashed rewards; %s", err.Error())
+		next.log.Errorf("can not calculate stashed rewards; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
@@ -291,18 +291,18 @@ func (ftm *FtmBridge) FMintRewardsStashed(addr *common.Address) (hexutil.Big, er
 
 // FMintCanClaimRewards resolves the fMint account flag for being allowed
 // to claim earned rewards.
-func (ftm *FtmBridge) FMintCanClaimRewards(addr *common.Address) (bool, error) {
+func (next *NextBridge) FMintCanClaimRewards(addr *common.Address) (bool, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintMinterContract()
+	contract, err := next.fMintCfg.fMintMinterContract()
 	if err != nil {
-		ftm.log.Errorf("rewards claim check failed; %s", err.Error())
+		next.log.Errorf("rewards claim check failed; %s", err.Error())
 		return false, err
 	}
 
 	// ask if the claim is possible
 	flag, err := contract.RewardCanClaim(nil, *addr)
 	if err != nil {
-		ftm.log.Errorf("can not check rewards claim flag; %s", err.Error())
+		next.log.Errorf("can not check rewards claim flag; %s", err.Error())
 		return false, err
 	}
 
@@ -312,18 +312,18 @@ func (ftm *FtmBridge) FMintCanClaimRewards(addr *common.Address) (bool, error) {
 // FMintCanReceiveRewards resolves the fMint account flag for being eligible
 // to receive earned rewards. If the collateral to debt ration drop below
 // certain value, earned rewards are burned.
-func (ftm *FtmBridge) FMintCanReceiveRewards(addr *common.Address) (bool, error) {
+func (next *NextBridge) FMintCanReceiveRewards(addr *common.Address) (bool, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintMinterContract()
+	contract, err := next.fMintCfg.fMintMinterContract()
 	if err != nil {
-		ftm.log.Errorf("rewards eligibility check failed; %s", err.Error())
+		next.log.Errorf("rewards eligibility check failed; %s", err.Error())
 		return false, err
 	}
 
 	// ask if the claim is possible
 	flag, err := contract.RewardIsEligible(nil, *addr)
 	if err != nil {
-		ftm.log.Errorf("can not check rewards eligibility flag; %s", err.Error())
+		next.log.Errorf("can not check rewards eligibility flag; %s", err.Error())
 		return false, err
 	}
 
@@ -332,9 +332,9 @@ func (ftm *FtmBridge) FMintCanReceiveRewards(addr *common.Address) (bool, error)
 
 // FMintCanPushRewards signals if there are any rewards unlocked
 // on the rewards distribution contract and can be pushed to accounts.
-func (ftm *FtmBridge) FMintCanPushRewards() (bool, error) {
+func (next *NextBridge) FMintCanPushRewards() (bool, error) {
 	// connect the contract
-	contract, err := ftm.fMintCfg.fMintRewardsDistribution()
+	contract, err := next.fMintCfg.fMintRewardsDistribution()
 	if err != nil {
 		return false, err
 	}
@@ -342,7 +342,7 @@ func (ftm *FtmBridge) FMintCanPushRewards() (bool, error) {
 	// get the last time rewards were pushed
 	lastPush, err := contract.LastRewardPush(nil)
 	if err != nil {
-		ftm.log.Errorf("can not check rewards last push; %s", err.Error())
+		next.log.Errorf("can not check rewards last push; %s", err.Error())
 		return false, err
 	}
 

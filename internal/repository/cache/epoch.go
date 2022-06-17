@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"strings"
 )

@@ -17,14 +17,14 @@ import (
 // Larger inputs (like contract deployments) need to be loaded from the blockchain directly if needed.
 const trxLargeInputWall = 32 * 8
 
-// TransactionDecimalsCorrection is used to manipulate precision of a transaction amount value
+// TransactionDecimalsCorrection is used to manipulate precision of a transaction amount value,
 // so it can be stored in database as INT64 without loosing too much data
 var TransactionDecimalsCorrection = new(big.Int).SetUint64(1000000000)
 
 // TransactionGasCorrection is used to restore the precision on the transaction gas value calculations.
 var TransactionGasCorrection = new(big.Int).SetUint64(10000000)
 
-// Transaction represents basic information provided by the API about transaction inside Opera blockchain.
+// Transaction represents basic information provided by the API about transaction inside NEXT blockchain.
 type Transaction struct {
 	// BlockHash represents hash of the block where this transaction was in. nil when its pending.
 	BlockHash *common.Hash `json:"blockHash"`

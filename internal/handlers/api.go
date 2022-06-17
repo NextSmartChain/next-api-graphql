@@ -2,10 +2,10 @@
 package handlers
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/graphql/resolvers"
-	gqlSchema "fantom-api-graphql/internal/graphql/schema"
-	"fantom-api-graphql/internal/logger"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/graphql/resolvers"
+	gqlSchema "next-api-graphql/internal/graphql/schema"
+	"next-api-graphql/internal/logger"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
 	"github.com/graph-gophers/graphql-transport-ws/graphqlws"

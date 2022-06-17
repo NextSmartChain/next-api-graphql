@@ -2,7 +2,7 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/repository"
 	"github.com/ethereum/go-ethereum/common"
 )
 

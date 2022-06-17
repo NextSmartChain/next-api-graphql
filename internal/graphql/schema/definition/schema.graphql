@@ -17,7 +17,7 @@ type Query {
     # of the SFC contract managing the block chain staking economy.
     sfcConfig: SfcConfig!
 
-    # Total number of accounts active on the Opera blockchain.
+    # Total number of accounts active on the NEXT blockchain.
     accountsActive:Long!
 
     # Get an Account information by hash address.
@@ -62,7 +62,7 @@ type Query {
     # Get filtered list of ERC1155 Transactions.
     erc1155Transactions(cursor:Cursor, count:Int = 25, token: Address, tokenId: BigInt, account: Address, txType: String): ERC1155TransactionList!
 
-    # Get the id of the current epoch of the Opera blockchain.
+    # Get the id of the current epoch of the NEXT blockchain.
     currentEpoch:Long!
 
     # Get information about specified epoch. Returns current epoch information
@@ -72,10 +72,10 @@ type Query {
     # Get a scrollable list of epochs sorted from the last one back by default.
     epochs(cursor: Cursor, count: Int = 25): EpochList!
 
-    # The last staker id in Opera blockchain.
+    # The last staker id in NEXT blockchain.
     lastStakerId: Long!
 
-    # The number of stakers in Opera blockchain.
+    # The number of stakers in NEXT blockchain.
     stakersNum: Long!
 
     # Staker information. The staker is loaded either by numeric ID,
@@ -109,11 +109,11 @@ type Query {
     # for the transaction described by the parameters of the call.
     estimateGas(from: Address, to: Address, value: BigInt, data: String): Long
 
-    # Get price details of the Opera blockchain token for the given target symbols.
+    # Get price details of the NEXT blockchain token for the given target symbols.
     price(to:String!):Price!
 
     # Get calculated staking rewards for an account or given
-    # staking amount in FTM tokens.
+    # staking amount in NEXT tokens.
     # At least one of the address and amount parameters must be provided.
     # If you provide both, the address takes precedence and the amount is ignored.
     estimateRewards(address:Address, amount:Long):EstimatedRewards!
@@ -146,7 +146,7 @@ type Query {
     fMintUserTokens(purpose:FMintUserTokenPurpose=FMINT_COLLATERAL):[FMintUserToken!]!
 
     # defiUniswapPairs represents a list of all pairs managed
-    # by the Uniswap Core contract on Opera blockchain.
+    # by the Uniswap Core contract on NEXT blockchain.
     defiUniswapPairs: [UniswapPair!]!
 
     # defiUniswapAmountsOut calculates the expected output amounts

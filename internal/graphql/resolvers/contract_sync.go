@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"net/http"
 	"sync"
 	"time"

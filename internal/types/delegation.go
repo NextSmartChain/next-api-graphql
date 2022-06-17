@@ -40,7 +40,7 @@ const (
 	FiDelegationStamp = "stamp"
 )
 
-// Delegation represents a delegator in Opera blockchain.
+// Delegation represents a delegator in NEXT blockchain.
 type Delegation struct {
 	ID              string         `json:"id"`
 	Transaction     common.Hash    `json:"trx"`

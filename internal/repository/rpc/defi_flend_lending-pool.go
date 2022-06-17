@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -14,8 +14,8 @@ We strongly discourage opening Lachesis RPC interface for unrestricted Internet 
 package rpc
 
 import (
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -27,7 +27,7 @@ import (
 // fLendConfig represents the configuration for DeFi fLend module.
 type fLendConfig struct {
 	// bridge represents the reference to the instantiated RPC bridge
-	bridge *FtmBridge
+	bridge *NextBridge
 
 	// lendigPoolAddress represents the address
 	// of the fLend LendingPool contract
@@ -35,29 +35,29 @@ type fLendConfig struct {
 }
 
 // FLendGetLendingPool resolves Lending pool contract instance
-func (ftm *FtmBridge) FLendGetLendingPool() (*contracts.ILendingPool, error) {
+func (next *NextBridge) FLendGetLendingPool() (*contracts.ILendingPool, error) {
 	// get the lending pool contract
-	lp, err := contracts.NewILendingPool(ftm.fLendCfg.lendigPoolAddress, ftm.eth)
+	lp, err := contracts.NewILendingPool(next.fLendCfg.lendigPoolAddress, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Can not get lending pool contract on address %s; %s", ftm.fLendCfg.lendigPoolAddress.String(), err.Error())
+		next.log.Errorf("Can not get lending pool contract on address %s; %s", next.fLendCfg.lendigPoolAddress.String(), err.Error())
 		return nil, err
 	}
 	return lp, nil
 }
 
 // FLendGetLendingPoolReserveData resolves reserve data
-func (ftm *FtmBridge) FLendGetLendingPoolReserveData(assetAddress *common.Address) (*types.ReserveData, error) {
+func (next *NextBridge) FLendGetLendingPoolReserveData(assetAddress *common.Address) (*types.ReserveData, error) {
 
 	// get the lending pool contract
-	lp, err := ftm.FLendGetLendingPool()
+	lp, err := next.FLendGetLendingPool()
 	if err != nil {
-		ftm.log.Errorf("Can not access lending pool %s", err.Error())
+		next.log.Errorf("Can not access lending pool %s", err.Error())
 		return nil, err
 	}
 
 	rd, err := lp.GetReserveData(&bind.CallOpts{}, *assetAddress)
 	if err != nil {
-		ftm.log.Errorf("Cannot get reserve data for asset %s: %s", assetAddress.String(), err.Error())
+		next.log.Errorf("Cannot get reserve data for asset %s: %s", assetAddress.String(), err.Error())
 		return nil, err
 	}
 
@@ -81,42 +81,42 @@ func (ftm *FtmBridge) FLendGetLendingPoolReserveData(assetAddress *common.Addres
 }
 
 // FLendGetReserveList resolves list of reserve addresses
-func (ftm *FtmBridge) FLendGetReserveList() ([]common.Address, error) {
+func (next *NextBridge) FLendGetReserveList() ([]common.Address, error) {
 
 	// get the lending pool contract
-	lp, err := ftm.FLendGetLendingPool()
+	lp, err := next.FLendGetLendingPool()
 	if err != nil {
-		ftm.log.Errorf("Can not access lending pool %s", err.Error())
+		next.log.Errorf("Can not access lending pool %s", err.Error())
 		return nil, err
 	}
 
 	rl, err := lp.GetReservesList(&bind.CallOpts{})
 	if err != nil {
-		ftm.log.Errorf("Cannot get reserves list: %s", err.Error())
+		next.log.Errorf("Cannot get reserves list: %s", err.Error())
 		return nil, err
 	}
 	return rl, nil
 }
 
 // FLendGetUserAccountData resolves user account data for fLend
-func (ftm *FtmBridge) FLendGetUserAccountData(userAddress *common.Address) (*types.FLendUserAccountData, error) {
+func (next *NextBridge) FLendGetUserAccountData(userAddress *common.Address) (*types.FLendUserAccountData, error) {
 
 	// get the lending pool contract
-	lp, err := ftm.FLendGetLendingPool()
+	lp, err := next.FLendGetLendingPool()
 	if err != nil {
-		ftm.log.Errorf("Can not access lending pool %s", err.Error())
+		next.log.Errorf("Can not access lending pool %s", err.Error())
 		return nil, err
 	}
 
 	ua, err := lp.GetUserAccountData(&bind.CallOpts{}, *userAddress)
 	if err != nil {
-		ftm.log.Errorf("Cannot get user account data for address %s: %s", userAddress.String(), err.Error())
+		next.log.Errorf("Cannot get user account data for address %s: %s", userAddress.String(), err.Error())
 		return nil, err
 	}
 
 	uc, err := lp.GetUserConfiguration(&bind.CallOpts{}, *userAddress)
 	if err != nil {
-		ftm.log.Errorf("Cannot get user account configuration data for address %s: %s", userAddress.String(), err.Error())
+		next.log.Errorf("Cannot get user account configuration data for address %s: %s", userAddress.String(), err.Error())
 		return nil, err
 	}
 
@@ -133,7 +133,7 @@ func (ftm *FtmBridge) FLendGetUserAccountData(userAddress *common.Address) (*typ
 }
 
 // FLendGetUserDepositHistory resolves deposit event history data for specified user and asset address
-func (ftm *FtmBridge) FLendGetUserDepositHistory(userAddress *common.Address, assetAddress *common.Address) ([]*types.FLendDeposit, error) {
+func (next *NextBridge) FLendGetUserDepositHistory(userAddress *common.Address, assetAddress *common.Address) ([]*types.FLendDeposit, error) {
 	// create user filter
 	userFilter := make([]common.Address, 0)
 	if userAddress != nil {
@@ -147,16 +147,16 @@ func (ftm *FtmBridge) FLendGetUserDepositHistory(userAddress *common.Address, as
 	}
 
 	// get the lending pool contract
-	lp, err := ftm.FLendGetLendingPool()
+	lp, err := next.FLendGetLendingPool()
 	if err != nil {
-		ftm.log.Errorf("Can not access lending pool %s", err.Error())
+		next.log.Errorf("Can not access lending pool %s", err.Error())
 		return nil, err
 	}
 
 	// filter logs
 	fdi, err := lp.FilterDeposit(&bind.FilterOpts{}, assetFilter, userFilter, []uint16{0})
 	if err != nil {
-		ftm.log.Errorf("can not filter lending pool deposit logs: %s", err.Error())
+		next.log.Errorf("can not filter lending pool deposit logs: %s", err.Error())
 		return nil, err
 	}
 
@@ -167,9 +167,9 @@ func (ftm *FtmBridge) FLendGetUserDepositHistory(userAddress *common.Address, as
 	for fdi.Next() {
 		// get block for timestamp information
 		blkHash := fdi.Event.Raw.BlockHash.String()
-		blk, err := ftm.BlockByHash(&blkHash)
+		blk, err := next.BlockByHash(&blkHash)
 		if err != nil {
-			ftm.log.Errorf("fLend block with hash %s was not found: %s", blkHash, err.Error())
+			next.log.Errorf("fLend block with hash %s was not found: %s", blkHash, err.Error())
 			continue
 		}
 

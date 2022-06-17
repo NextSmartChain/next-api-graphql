@@ -2,7 +2,7 @@
 package cache
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/allegro/bigcache"
 	"github.com/ethereum/go-ethereum/common"

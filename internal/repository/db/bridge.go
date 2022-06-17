@@ -3,8 +3,8 @@ package db
 
 import (
 	"context"
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
 	"fmt"
 	"math/big"
 	"sync"

@@ -272,12 +272,12 @@ func (_DefiFMintAddressProvider *DefiFMintAddressProviderCallerSession) GetDebtP
 	return _DefiFMintAddressProvider.Contract.GetDebtPool(&_DefiFMintAddressProvider.CallOpts)
 }
 
-// GetFantomMint is a free data retrieval call binding the contract method 0x44969711.
+// GetNEXTMint is a free data retrieval call binding the contract method 0x44969711.
 //
-// Solidity: function getFantomMint() view returns(address)
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderCaller) GetFantomMint(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function getNEXTMint() view returns(address)
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderCaller) GetNEXTMint(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _DefiFMintAddressProvider.contract.Call(opts, &out, "getFantomMint")
+	err := _DefiFMintAddressProvider.contract.Call(opts, &out, "getNEXTMint")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -289,18 +289,18 @@ func (_DefiFMintAddressProvider *DefiFMintAddressProviderCaller) GetFantomMint(o
 
 }
 
-// GetFantomMint is a free data retrieval call binding the contract method 0x44969711.
+// GetNEXTMint is a free data retrieval call binding the contract method 0x44969711.
 //
-// Solidity: function getFantomMint() view returns(address)
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderSession) GetFantomMint() (common.Address, error) {
-	return _DefiFMintAddressProvider.Contract.GetFantomMint(&_DefiFMintAddressProvider.CallOpts)
+// Solidity: function getNEXTMint() view returns(address)
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderSession) GetNEXTMint() (common.Address, error) {
+	return _DefiFMintAddressProvider.Contract.GetNEXTMint(&_DefiFMintAddressProvider.CallOpts)
 }
 
-// GetFantomMint is a free data retrieval call binding the contract method 0x44969711.
+// GetNEXTMint is a free data retrieval call binding the contract method 0x44969711.
 //
-// Solidity: function getFantomMint() view returns(address)
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderCallerSession) GetFantomMint() (common.Address, error) {
-	return _DefiFMintAddressProvider.Contract.GetFantomMint(&_DefiFMintAddressProvider.CallOpts)
+// Solidity: function getNEXTMint() view returns(address)
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderCallerSession) GetNEXTMint() (common.Address, error) {
+	return _DefiFMintAddressProvider.Contract.GetNEXTMint(&_DefiFMintAddressProvider.CallOpts)
 }
 
 // GetPriceOracleProxy is a free data retrieval call binding the contract method 0x045bb7f8.
@@ -573,25 +573,25 @@ func (_DefiFMintAddressProvider *DefiFMintAddressProviderTransactorSession) SetD
 	return _DefiFMintAddressProvider.Contract.SetDebtPool(&_DefiFMintAddressProvider.TransactOpts, _addr)
 }
 
-// SetFantomMint is a paid mutator transaction binding the contract method 0xfcc3c074.
+// SetNEXTMint is a paid mutator transaction binding the contract method 0xfcc3c074.
 //
-// Solidity: function setFantomMint(address _addr) returns()
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderTransactor) SetFantomMint(opts *bind.TransactOpts, _addr common.Address) (*types.Transaction, error) {
-	return _DefiFMintAddressProvider.contract.Transact(opts, "setFantomMint", _addr)
+// Solidity: function setNEXTMint(address _addr) returns()
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderTransactor) SetNEXTMint(opts *bind.TransactOpts, _addr common.Address) (*types.Transaction, error) {
+	return _DefiFMintAddressProvider.contract.Transact(opts, "setNEXTMint", _addr)
 }
 
-// SetFantomMint is a paid mutator transaction binding the contract method 0xfcc3c074.
+// SetNEXTMint is a paid mutator transaction binding the contract method 0xfcc3c074.
 //
-// Solidity: function setFantomMint(address _addr) returns()
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderSession) SetFantomMint(_addr common.Address) (*types.Transaction, error) {
-	return _DefiFMintAddressProvider.Contract.SetFantomMint(&_DefiFMintAddressProvider.TransactOpts, _addr)
+// Solidity: function setNEXTMint(address _addr) returns()
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderSession) SetNEXTMint(_addr common.Address) (*types.Transaction, error) {
+	return _DefiFMintAddressProvider.Contract.SetNEXTMint(&_DefiFMintAddressProvider.TransactOpts, _addr)
 }
 
-// SetFantomMint is a paid mutator transaction binding the contract method 0xfcc3c074.
+// SetNEXTMint is a paid mutator transaction binding the contract method 0xfcc3c074.
 //
-// Solidity: function setFantomMint(address _addr) returns()
-func (_DefiFMintAddressProvider *DefiFMintAddressProviderTransactorSession) SetFantomMint(_addr common.Address) (*types.Transaction, error) {
-	return _DefiFMintAddressProvider.Contract.SetFantomMint(&_DefiFMintAddressProvider.TransactOpts, _addr)
+// Solidity: function setNEXTMint(address _addr) returns()
+func (_DefiFMintAddressProvider *DefiFMintAddressProviderTransactorSession) SetNEXTMint(_addr common.Address) (*types.Transaction, error) {
+	return _DefiFMintAddressProvider.Contract.SetNEXTMint(&_DefiFMintAddressProvider.TransactOpts, _addr)
 }
 
 // SetPriceOracleProxy is a paid mutator transaction binding the contract method 0xcc653b9a.

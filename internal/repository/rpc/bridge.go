@@ -1,28 +1,28 @@
 /*
-Package rpc implements bridge to Opera/Lachesis full node API interface.
+Package rpc implements bridge to NEXT Smart Chain full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
-You should also consider security implications of opening Opera/Lachesis RPC interface for remote access.
+You should also consider security implications of opening NEXT Smart Chain RPC interface for remote access.
 If you considering it as your deployment strategy, you should establish encrypted channel between the API server
-and Opera/Lachesis RPC interface with connection limited to specified endpoints.
+and NEXT Smart Chain RPC interface with connection limited to specified endpoints.
 
-We strongly discourage opening Opera/Lachesis RPC interface for unrestricted Internet access.
+We strongly discourage opening NEXT Smart Chain RPC interface for unrestricted Internet access.
 */
 package rpc
 
 import (
 	"context"
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository/rpc/contracts"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	etc "github.com/ethereum/go-ethereum/core/types"
 	eth "github.com/ethereum/go-ethereum/ethclient"
-	ftm "github.com/ethereum/go-ethereum/rpc"
+	next "github.com/ethereum/go-ethereum/rpc"
 	"golang.org/x/sync/singleflight"
 	"strings"
 	"sync"
@@ -31,9 +31,9 @@ import (
 // rpcHeadProxyChannelCapacity represents the capacity of the new received blocks proxy channel.
 const rpcHeadProxyChannelCapacity = 10000
 
-// FtmBridge represents Opera/Lachesis RPC abstraction layer.
-type FtmBridge struct {
-	rpc *ftm.Client
+// NextBridge represents NEXT Smart Chain RPC abstraction layer.
+type NextBridge struct {
+	rpc *next.Client
 	eth *eth.Client
 	log logger.Logger
 	cg  *singleflight.Group
@@ -57,8 +57,8 @@ type FtmBridge struct {
 	headers  chan *etc.Header
 }
 
-// New creates new Opera/Lachesis RPC connection bridge.
-func New(cfg *config.Config, log logger.Logger) (*FtmBridge, error) {
+// New creates new NEXT Smart Chain RPC connection bridge.
+func New(cfg *config.Config, log logger.Logger) (*NextBridge, error) {
 	cli, con, err := connect(cfg, log)
 	if err != nil {
 		log.Criticalf("can not open connection; %s", err.Error())
@@ -66,7 +66,7 @@ func New(cfg *config.Config, log logger.Logger) (*FtmBridge, error) {
 	}
 
 	// build the bridge structure using the con we have
-	br := &FtmBridge{
+	br := &NextBridge{
 		rpc: cli,
 		eth: con,
 		log: log,
@@ -97,19 +97,19 @@ func New(cfg *config.Config, log logger.Logger) (*FtmBridge, error) {
 }
 
 // connect opens connections we need to communicate with the blockchain node.
-func connect(cfg *config.Config, log logger.Logger) (*ftm.Client, *eth.Client, error) {
+func connect(cfg *config.Config, log logger.Logger) (*next.Client, *eth.Client, error) {
 	// log what we do
-	log.Infof("connecting blockchain node at %s", cfg.Opera.Url)
+	log.Infof("connecting blockchain node at %s", cfg.Next.Url)
 
 	// try to establish a connection
-	client, err := ftm.Dial(cfg.Opera.Url)
+	client, err := next.Dial(cfg.Next.Url)
 	if err != nil {
 		log.Critical(err)
 		return nil, nil, err
 	}
 
 	// try to establish a for smart contract interaction
-	con, err := eth.Dial(cfg.Opera.Url)
+	con, err := eth.Dial(cfg.Next.Url)
 	if err != nil {
 		log.Critical(err)
 		return nil, nil, err
@@ -121,43 +121,43 @@ func connect(cfg *config.Config, log logger.Logger) (*ftm.Client, *eth.Client, e
 }
 
 // run starts the bridge threads required to collect blockchain data.
-func (ftm *FtmBridge) run() {
-	ftm.wg.Add(1)
-	go ftm.observeBlocks()
+func (next *NextBridge) run() {
+	next.wg.Add(1)
+	go next.observeBlocks()
 }
 
 // terminate kills the bridge threads to end the bridge gracefully.
-func (ftm *FtmBridge) terminate() {
-	ftm.sigClose <- true
-	ftm.wg.Wait()
-	ftm.log.Noticef("rpc threads terminated")
+func (next *NextBridge) terminate() {
+	next.sigClose <- true
+	next.wg.Wait()
+	next.log.Noticef("rpc threads terminated")
 }
 
-// Close will finish all pending operations and terminate the Opera/Lachesis RPC connection
-func (ftm *FtmBridge) Close() {
+// Close will finish all pending operations and terminate the NEXT Smart Chain RPC connection
+func (next *NextBridge) Close() {
 	// terminate threads before we close connections
-	ftm.terminate()
+	next.terminate()
 
 	// do we have a connection?
-	if ftm.rpc != nil {
-		ftm.rpc.Close()
-		ftm.eth.Close()
-		ftm.log.Info("blockchain connections are closed")
+	if next.rpc != nil {
+		next.rpc.Close()
+		next.eth.Close()
+		next.log.Info("blockchain connections are closed")
 	}
 }
 
-// Connection returns open Opera/Lachesis connection.
-func (ftm *FtmBridge) Connection() *ftm.Client {
-	return ftm.rpc
+// Connection returns open NEXT Smart Chain connection.
+func (next *NextBridge) Connection() *next.Client {
+	return next.rpc
 }
 
 // DefaultCallOpts creates a default record for call options.
-func (ftm *FtmBridge) DefaultCallOpts() *bind.CallOpts {
+func (next *NextBridge) DefaultCallOpts() *bind.CallOpts {
 	// get the default call opts only once if called in parallel
-	co, _, _ := ftm.cg.Do("default-call-opts", func() (interface{}, error) {
+	co, _, _ := next.cg.Do("default-call-opts", func() (interface{}, error) {
 		return &bind.CallOpts{
 			Pending:     false,
-			From:        ftm.sigConfig.Address,
+			From:        next.sigConfig.Address,
 			BlockNumber: nil,
 			Context:     context.Background(),
 		}, nil
@@ -166,35 +166,35 @@ func (ftm *FtmBridge) DefaultCallOpts() *bind.CallOpts {
 }
 
 // SfcContract returns instance of SFC contract for interaction.
-func (ftm *FtmBridge) SfcContract() *contracts.SfcContract {
+func (next *NextBridge) SfcContract() *contracts.SfcContract {
 	// lazy create SFC contract instance
-	if nil == ftm.sfcContract {
+	if nil == next.sfcContract {
 		// instantiate the contract and display its name
 		var err error
-		ftm.sfcContract, err = contracts.NewSfcContract(ftm.sfcConfig.SFCContract, ftm.eth)
+		next.sfcContract, err = contracts.NewSfcContract(next.sfcConfig.SFCContract, next.eth)
 		if err != nil {
-			ftm.log.Criticalf("failed to instantiate SFC contract; %s", err.Error())
+			next.log.Criticalf("failed to instantiate SFC contract; %s", err.Error())
 			panic(err)
 		}
 	}
-	return ftm.sfcContract
+	return next.sfcContract
 }
 
 // SfcAbi returns a parse ABI of the AFC contract.
-func (ftm *FtmBridge) SfcAbi() *abi.ABI {
-	if nil == ftm.sfcAbi {
+func (next *NextBridge) SfcAbi() *abi.ABI {
+	if nil == next.sfcAbi {
 		ab, err := abi.JSON(strings.NewReader(contracts.SfcContractABI))
 		if err != nil {
-			ftm.log.Criticalf("failed to parse SFC contract ABI; %s", err.Error())
+			next.log.Criticalf("failed to parse SFC contract ABI; %s", err.Error())
 			panic(err)
 		}
-		ftm.sfcAbi = &ab
+		next.sfcAbi = &ab
 	}
-	return ftm.sfcAbi
+	return next.sfcAbi
 }
 
 // ObservedBlockProxy provides a channel fed with new headers observed
 // by the connected blockchain node.
-func (ftm *FtmBridge) ObservedBlockProxy() chan *etc.Header {
-	return ftm.headers
+func (next *NextBridge) ObservedBlockProxy() chan *etc.Header {
+	return next.headers
 }

@@ -2,13 +2,13 @@
 package cache
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"strings"
 )
 
 // priceCacheKeyPrefix is the prefix used for cache key to store price information.
-const priceCacheKeyPrefix = "price_FTM_2_"
+const priceCacheKeyPrefix = "price_NEXT_2_"
 
 // PullPrice extracts price information from the in-memory cache if available.
 func (b *MemBridge) PullPrice(symbol string) *types.Price {

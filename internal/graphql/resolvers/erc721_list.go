@@ -2,7 +2,7 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/repository"
 )
 
 // Erc721ContractList resolves an instance of ERC721 token list if available.

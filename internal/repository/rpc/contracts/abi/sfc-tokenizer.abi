@@ -8,7 +8,7 @@
         "type": "address"
       }
     ],
-    "name": "_updateSFTMTokenAddress",
+    "name": "_updateSNEXTTokenAddress",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -74,7 +74,7 @@
         "type": "uint256"
       }
     ],
-    "name": "redeemSFTM",
+    "name": "redeemSNEXT",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -94,7 +94,7 @@
         "type": "uint256"
       }
     ],
-    "name": "outstandingSFTM",
+    "name": "outstandingSNEXT",
     "outputs": [
       {
         "internalType": "uint256",
@@ -109,7 +109,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "sFTMTokenAddress",
+    "name": "sNEXTTokenAddress",
     "outputs": [
       {
         "internalType": "address",
@@ -178,7 +178,7 @@
         "type": "uint256"
       }
     ],
-    "name": "mintSFTM",
+    "name": "mintSNEXT",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",

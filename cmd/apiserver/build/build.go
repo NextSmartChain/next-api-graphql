@@ -5,7 +5,7 @@
 package build
 
 import (
-	"fantom-api-graphql/internal/config"
+	"next-api-graphql/internal/config"
 	"fmt"
 	"runtime"
 )

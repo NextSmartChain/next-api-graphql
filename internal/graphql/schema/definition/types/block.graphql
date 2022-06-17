@@ -1,4 +1,4 @@
-# Block is an Opera block chain block.
+# Block is an NEXT block chain block.
 type Block {
     # Number is the number of this block, starting at 0 for the genesis block.
     number: Long!

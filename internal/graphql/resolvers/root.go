@@ -2,11 +2,11 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/cmd/apiserver/build"
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/svc"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/cmd/apiserver/build"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/svc"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"golang.org/x/sync/singleflight"
 	"sync"

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// GasPricePeriodTypeSuggestion represents the type of gas price period data from the Opera node suggestion call.
+	// GasPricePeriodTypeSuggestion represents the type of gas price period data from the NEXT node suggestion call.
 	GasPricePeriodTypeSuggestion = iota
 )
 
@@ -48,7 +48,7 @@ type GasPrice struct {
 }
 
 // GasPricePeriod represents a data set of interval of gas price
-// estimation provided by the Opera node.
+// estimation provided by the NEXT node.
 type GasPricePeriod struct {
 	Type  int8      `json:"type" bson:"type"`
 	Open  int64     `json:"open" bson:"open"`

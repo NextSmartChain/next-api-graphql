@@ -2,16 +2,16 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT/Lachesis full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
 package repository
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"math/big"
 	"time"
 
@@ -22,16 +22,16 @@ import (
 
 // Repository interface defines functions the underlying implementation provides to API resolvers.
 type Repository interface {
-	// Account returns account at Opera blockchain for an address, nil if not found.
+	// Account returns account at NEXT blockchain for an address, nil if not found.
 	Account(*common.Address) (*types.Account, error)
 
-	// AccountBalance returns the current balance of an account at Opera blockchain.
+	// AccountBalance returns the current balance of an account at NEXT blockchain.
 	AccountBalance(*common.Address) (*hexutil.Big, error)
 
-	// AccountNonce returns the current number of sent transactions of an account at Opera blockchain.
+	// AccountNonce returns the current number of sent transactions of an account at NEXT blockchain.
 	AccountNonce(*common.Address) (*hexutil.Uint64, error)
 
-	// AccountTransactions returns list of transaction hashes for account at Opera blockchain.
+	// AccountTransactions returns list of transaction hashes for account at NEXT blockchain.
 	//
 	// String cursor represents cursor based on which the list is loaded. If null,
 	// it loads either from top, or bottom of the list, based on the value
@@ -59,7 +59,7 @@ type Repository interface {
 	// AccountMarkActivity marks the latest account activity in the repository.
 	AccountMarkActivity(*common.Address, uint64) error
 
-	// BlockHeight returns the current height of the Opera blockchain in blocks.
+	// BlockHeight returns the current height of the NEXT blockchain in blocks.
 	BlockHeight() (*hexutil.Big, error)
 
 	// LastKnownBlock returns number of the last block known to the repository.
@@ -72,12 +72,12 @@ type Repository interface {
 	// by the connected blockchain node.
 	ObservedHeaders() chan *etc.Header
 
-	// BlockByNumber returns a block at Opera blockchain represented by a number.
+	// BlockByNumber returns a block at NEXT blockchain represented by a number.
 	// Top block is returned if the number is not provided.
 	// If the block is not found, ErrBlockNotFound error is returned.
 	BlockByNumber(*hexutil.Uint64) (*types.Block, error)
 
-	// BlockByHash returns a block at Opera blockchain represented by a hash.
+	// BlockByHash returns a block at NEXT blockchain represented by a hash.
 	// Top block is returned if the hash is not provided.
 	// If the block is not found, ErrBlockNotFound error is returned.
 	BlockByHash(*common.Hash) (*types.Block, error)
@@ -92,7 +92,7 @@ type Repository interface {
 	// Contract extract a smart contract information by address if available.
 	Contract(*common.Address) (*types.Contract, error)
 
-	// Contracts returns list of smart contracts at Opera blockchain.
+	// Contracts returns list of smart contracts at NEXT blockchain.
 	Contracts(bool, *string, int32) (*types.ContractList, error)
 
 	// ValidateContract tries to validate contract byte code using
@@ -139,14 +139,14 @@ type Repository interface {
 	// StoreTransaction adds a new incoming transaction from blockchain to the repository.
 	StoreTransaction(*types.Block, *types.Transaction) error
 
-	// LoadTransaction returns a transaction at Opera blockchain
+	// LoadTransaction returns a transaction at NEXT blockchain
 	// by a hash loaded directly from the node.
 	LoadTransaction(hash *common.Hash) (*types.Transaction, error)
 
-	// Transaction returns a transaction at Opera blockchain by a hash, nil if not found.
+	// Transaction returns a transaction at NEXT blockchain by a hash, nil if not found.
 	Transaction(*common.Hash, bool) (*types.Transaction, error)
 
-	// Transactions returns list of transaction hashes at Opera blockchain.
+	// Transactions returns list of transaction hashes at NEXT blockchain.
 	Transactions(*string, int32) (*types.TransactionList, error)
 
 	// TransactionsCount returns total number of transactions in the block chain.
@@ -167,10 +167,10 @@ type Repository interface {
 	// SendTransaction sends raw signed and RLP encoded transaction to the block chain.
 	SendTransaction(hexutil.Bytes) (*types.Transaction, error)
 
-	// LastValidatorId returns the last validator id in Opera blockchain.
+	// LastValidatorId returns the last validator id in NEXT blockchain.
 	LastValidatorId() (uint64, error)
 
-	// ValidatorsCount returns the number of stakers in Opera blockchain.
+	// ValidatorsCount returns the number of stakers in NEXT blockchain.
 	ValidatorsCount() (uint64, error)
 
 	// IsValidator returns TRUE if the given address is an SFC staker.
@@ -240,9 +240,9 @@ type Repository interface {
 	// PendingRewards returns a detail of pending rewards for the given delegation.
 	PendingRewards(*common.Address, *hexutil.Big) (*types.PendingRewards, error)
 
-	// DelegationOutstandingSFTM returns the amount of sFTM tokens for the delegation
+	// DelegationOutstandingSNEXT returns the amount of sNEXT tokens for the delegation
 	// identified by the delegator address and the staker id.
-	DelegationOutstandingSFTM(*common.Address, *hexutil.Big) (*hexutil.Big, error)
+	DelegationOutstandingSNEXT(*common.Address, *hexutil.Big) (*hexutil.Big, error)
 
 	// DelegationTokenizerUnlocked returns the status of SFC Tokenizer lock
 	// for a delegation identified by the address and staker id.

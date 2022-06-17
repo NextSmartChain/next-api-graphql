@@ -2,8 +2,8 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"golang.org/x/sync/singleflight"
@@ -249,10 +249,10 @@ func (del Delegation) UnlockPenalty(args struct{ Amount hexutil.Big }) (hexutil.
 	return repository.R().DelegationUnlockPenalty(&del.Address, (*big.Int)(del.Delegation.ToStakerId), (*big.Int)(&args.Amount))
 }
 
-// OutstandingSFTM resolves the amount of outstanding sFTM tokens
+// OutstandingSNEXT resolves the amount of outstanding sNEXT tokens
 // minted for this account.
-func (del Delegation) OutstandingSFTM() (hexutil.Big, error) {
-	val, err := repository.R().DelegationOutstandingSFTM(&del.Address, del.Delegation.ToStakerId)
+func (del Delegation) OutstandingSNEXT() (hexutil.Big, error) {
+	val, err := repository.R().DelegationOutstandingSNEXT(&del.Address, del.Delegation.ToStakerId)
 	if err != nil {
 		return hexutil.Big{}, err
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-// Config defines configuration options structure for Fantom API server.
+// Config defines configuration options structure for NEXT API server.
 type Config struct {
 	// AppName holds the name of the application
 	AppName string `mapstructure:"app_name"`
@@ -22,8 +22,8 @@ type Config struct {
 	// Logger configuration
 	Log Log `mapstructure:"log"`
 
-	// Opera represents the node structure
-	Opera Opera `mapstructure:"opera"`
+	// Next represents the node structure
+	Next Next `mapstructure:"next"`
 
 	// Database configuration
 	Db Database `mapstructure:"db"`
@@ -92,8 +92,8 @@ type Log struct {
 	Format string `mapstructure:"format"`
 }
 
-// Opera represents the Opera node access configuration
-type Opera struct {
+// NEXT represents the Next node access configuration
+type Next struct {
 	Url string `mapstructure:"url"`
 }
 

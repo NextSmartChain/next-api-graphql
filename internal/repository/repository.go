@@ -2,7 +2,7 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT Smart Chain full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
@@ -13,13 +13,13 @@ import (
 	"sync"
 	"time"
 
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository/cache"
-	"fantom-api-graphql/internal/repository/db"
-	"fantom-api-graphql/internal/repository/rpc"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository/cache"
+	"next-api-graphql/internal/repository/db"
+	"next-api-graphql/internal/repository/rpc"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"golang.org/x/sync/singleflight"
 )
@@ -64,7 +64,7 @@ func R() Repository {
 type proxy struct {
 	cache *cache.MemBridge
 	db    *db.MongoDbBridge
-	rpc   *rpc.FtmBridge
+	rpc   *rpc.NextBridge
 	log   logger.Logger
 	cfg   *config.Config
 
@@ -132,7 +132,7 @@ func governanceContractsMap(cfg *config.Governance) map[string]*config.Governanc
 }
 
 // connect opens connections to the external sources we need.
-func connect(cfg *config.Config, log logger.Logger) (*cache.MemBridge, *db.MongoDbBridge, *rpc.FtmBridge, error) {
+func connect(cfg *config.Config, log logger.Logger) (*cache.MemBridge, *db.MongoDbBridge, *rpc.NextBridge, error) {
 	// create new in-memory cache bridge
 	caBridge, err := cache.New(cfg, log)
 	if err != nil {
@@ -147,10 +147,10 @@ func connect(cfg *config.Config, log logger.Logger) (*cache.MemBridge, *db.Mongo
 		return nil, nil, nil, err
 	}
 
-	// create new Lachesis RPC bridge
+	// create new NEXT RPC bridge
 	rpcBridge, err := rpc.New(cfg, log)
 	if err != nil {
-		log.Criticalf("can not connect Lachesis RPC interface, %s", err.Error())
+		log.Criticalf("can not connect NEXT RPC interface, %s", err.Error())
 		return nil, nil, nil, err
 	}
 	return caBridge, dbBridge, rpcBridge, nil

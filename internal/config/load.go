@@ -14,7 +14,7 @@ import (
 	"reflect"
 )
 
-// Load provides a loaded configuration for Fantom API server.
+// Load provides a loaded configuration for NEXT API server.
 func Load() (*Config, error) {
 	// Get the config reader
 	var config Config

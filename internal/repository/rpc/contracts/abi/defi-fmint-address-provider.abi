@@ -235,7 +235,7 @@
       "name": "getTokenRegistry",
       "outputs": [
         {
-          "internalType": "contract IFantomMintTokenRegistry",
+          "internalType": "contract INEXTMintTokenRegistry",
           "name": "",
           "type": "address"
         }
@@ -265,7 +265,7 @@
       "name": "getRewardDistribution",
       "outputs": [
         {
-          "internalType": "contract IFantomMintRewardManager",
+          "internalType": "contract INEXTMintRewardManager",
           "name": "",
           "type": "address"
         }
@@ -325,7 +325,7 @@
       "name": "getFantomMint",
       "outputs": [
         {
-          "internalType": "contract IFantomMintBalanceGuard",
+          "internalType": "contract INEXTMintBalanceGuard",
           "name": "",
           "type": "address"
         }
@@ -343,7 +343,7 @@
           "type": "address"
         }
       ],
-      "name": "setFantomMint",
+      "name": "setNEXTMint",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
@@ -355,7 +355,7 @@
       "name": "getCollateralPool",
       "outputs": [
         {
-          "internalType": "contract IFantomDeFiTokenStorage",
+          "internalType": "contract INEXTDeFiTokenStorage",
           "name": "",
           "type": "address"
         }
@@ -385,7 +385,7 @@
       "name": "getDebtPool",
       "outputs": [
         {
-          "internalType": "contract IFantomDeFiTokenStorage",
+          "internalType": "contract INEXTDeFiTokenStorage",
           "name": "",
           "type": "address"
         }

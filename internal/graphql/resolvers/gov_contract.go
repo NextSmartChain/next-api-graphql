@@ -2,7 +2,7 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/repository"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

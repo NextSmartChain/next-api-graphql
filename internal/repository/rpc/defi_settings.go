@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -14,8 +14,8 @@ We strongly discourage opening Lachesis RPC interface for unrestricted Internet 
 package rpc
 
 import (
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -28,22 +28,22 @@ import (
 type tConfigItemsLoaders map[*hexutil.Big]func(*bind.CallOpts) (*big.Int, error)
 
 // DefiConfiguration resolves the current DeFi contract settings.
-func (ftm *FtmBridge) DefiConfiguration() (*types.DefiSettings, error) {
+func (next *NextBridge) DefiConfiguration() (*types.DefiSettings, error) {
 	// access the contract
-	contract, err := ftm.fMintCfg.fMintMinterContract()
+	contract, err := next.fMintCfg.fMintMinterContract()
 	if err != nil {
 		return nil, err
 	}
 
 	// create the container
 	ds := types.DefiSettings{
-		FMintContract:           ftm.fMintCfg.mustContractAddress(fMintAddressMinter),
-		FMintAddressProvider:    ftm.fMintCfg.addressProvider,
-		FMintTokenRegistry:      ftm.fMintCfg.mustContractAddress(fMintAddressTokenRegistry),
-		FMintRewardDistribution: ftm.fMintCfg.mustContractAddress(fMintAddressRewardDistribution),
-		FMintCollateralPool:     ftm.fMintCfg.mustContractAddress(fMintCollateralPool),
-		FMintDebtPool:           ftm.fMintCfg.mustContractAddress(fMintDebtPool),
-		PriceOracleAggregate:    ftm.fMintCfg.mustContractAddress(fMintAddressPriceOracleProxy),
+		FMintContract:           next.fMintCfg.mustContractAddress(fMintAddressMinter),
+		FMintAddressProvider:    next.fMintCfg.addressProvider,
+		FMintTokenRegistry:      next.fMintCfg.mustContractAddress(fMintAddressTokenRegistry),
+		FMintRewardDistribution: next.fMintCfg.mustContractAddress(fMintAddressRewardDistribution),
+		FMintCollateralPool:     next.fMintCfg.mustContractAddress(fMintCollateralPool),
+		FMintDebtPool:           next.fMintCfg.mustContractAddress(fMintDebtPool),
+		PriceOracleAggregate:    next.fMintCfg.mustContractAddress(fMintAddressPriceOracleProxy),
 	}
 
 	// prep to load certain values
@@ -54,14 +54,14 @@ func (ftm *FtmBridge) DefiConfiguration() (*types.DefiSettings, error) {
 	}
 
 	// load all the configured values
-	if err := ftm.pullSetOfDefiConfigValues(loaders); err != nil {
-		ftm.log.Errorf("can not pull defi config values; %s", err.Error())
+	if err := next.pullSetOfDefiConfigValues(loaders); err != nil {
+		next.log.Errorf("can not pull defi config values; %s", err.Error())
 		return nil, err
 	}
 
 	// load the decimals correction
-	if ds.Decimals, err = ftm.pullDefiDecimalCorrection(contract); err != nil {
-		ftm.log.Errorf("can not pull defi decimals correction; %s", err.Error())
+	if ds.Decimals, err = next.pullDefiDecimalCorrection(contract); err != nil {
+		next.log.Errorf("can not pull defi decimals correction; %s", err.Error())
 		return nil, err
 	}
 
@@ -71,11 +71,11 @@ func (ftm *FtmBridge) DefiConfiguration() (*types.DefiSettings, error) {
 
 // pullSetOfDefiConfigValues pulls set of DeFi configuration values for the given
 // config loaders map.
-func (ftm *FtmBridge) pullDefiDecimalCorrection(con *contracts.DefiFMintMinter) (int32, error) {
+func (next *NextBridge) pullDefiDecimalCorrection(con *contracts.DefiFMintMinter) (int32, error) {
 	// load the decimals correction
-	val, err := ftm.pullDefiConfigValue(con.FMintFeeDigitsCorrection)
+	val, err := next.pullDefiConfigValue(con.FMintFeeDigitsCorrection)
 	if err != nil {
-		ftm.log.Errorf("can not pull decimals correction; %s", err.Error())
+		next.log.Errorf("can not pull decimals correction; %s", err.Error())
 		return 0, err
 	}
 
@@ -93,13 +93,13 @@ func (ftm *FtmBridge) pullDefiDecimalCorrection(con *contracts.DefiFMintMinter) 
 
 // pullSetOfDefiConfigValues pulls set of DeFi configuration values for the given
 // config loaders map.
-func (ftm *FtmBridge) pullSetOfDefiConfigValues(loaders tConfigItemsLoaders) error {
+func (next *NextBridge) pullSetOfDefiConfigValues(loaders tConfigItemsLoaders) error {
 	// collect loaders error
 	var err error
 
 	// loop the map and load the values
 	for ref, fn := range loaders {
-		*ref, err = ftm.pullDefiConfigValue(fn)
+		*ref, err = next.pullDefiConfigValue(fn)
 		if err != nil {
 			return err
 		}
@@ -109,7 +109,7 @@ func (ftm *FtmBridge) pullSetOfDefiConfigValues(loaders tConfigItemsLoaders) err
 }
 
 // tradeFee4 pulls DeFi trading fee from the Liquidity Pool contract.
-func (ftm *FtmBridge) pullDefiConfigValue(cf func(*bind.CallOpts) (*big.Int, error)) (hexutil.Big, error) {
+func (next *NextBridge) pullDefiConfigValue(cf func(*bind.CallOpts) (*big.Int, error)) (hexutil.Big, error) {
 	// pull the trading fee value
 	val, err := cf(nil)
 	if err != nil {

@@ -1,4 +1,4 @@
-# Price represents price information of core Opera token
+# Price represents price information of core NEXT token
 type Price {
     "Source unit symbol."
     fromSymbol: String!

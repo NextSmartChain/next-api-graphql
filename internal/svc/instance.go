@@ -2,9 +2,9 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository"
 	"sync"
 )
 

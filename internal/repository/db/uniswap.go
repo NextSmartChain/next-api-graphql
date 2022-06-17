@@ -4,7 +4,7 @@ package db
 import (
 	"context"
 	"crypto/sha256"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"math/big"
 	"strconv"

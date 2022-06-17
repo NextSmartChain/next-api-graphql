@@ -9,7 +9,7 @@ import (
 // Default values of configuration options
 const (
 	// this defines default application name
-	defApplicationName = "Fantom GraphQL API Server (custom)"
+	defApplicationName = "Next Smart Chain GraphQL API Server (custom)"
 
 	// defSelfAddress is a default address used as a placeholder
 	// for actual API server identification.
@@ -41,14 +41,14 @@ const (
 	// defLoggingFormat holds default format of the Logger output
 	defLoggingFormat = "%{color}%{level:-8s} %{shortpkg}/%{shortfunc}%{color:reset}: %{message}"
 
-	// defOperaUrl holds default opera connection string
-	defOperaUrl = "~/.opera/opera.ipc"
+	// defNextUrl holds default next connection string
+	defNextUrl = "~/.next/next.ipc"
 
 	// defMongoUrl holds default MongoDB connection string
 	defMongoUrl = "mongodb://localhost:27017"
 
 	// defMongoDatabase holds the default name of the API persistent database
-	defMongoDatabase = "fantom"
+	defMongoDatabase = "next"
 
 	// defCacheEvictionTime holds default time for in-memory eviction periods
 	defCacheEvictionTime = 15 * time.Minute
@@ -63,13 +63,13 @@ const (
 	defApiStateOrigin = "https://localhost"
 
 	// defNetworkInitializerContract is the default address of the NetworkInitializer contract
-	defNetworkInitializerContract = "0xd1005eed00000000000000000000000000000000"
+	defNetworkInitializerContract = "0xa1005eed00000000000000000000000000000000"
 
 	// defNodeDriverContract is the default address of the NodeDriver contract
-	defNodeDriverContract = "0xd100a01e00000000000000000000000000000000"
+	defNodeDriverContract = "0xa100000000000000000000000000000000000000"
 
 	// defSfcContract is the default address of the SFC contract
-	defSfcContract = "0xFC00FACE00000000000000000000000000000000"
+	defSfcContract = "0xa1005fc000000000000000000000000000000000"
 
 	// defDefiFMintAddressProvider represents the address of the fMintAddressProvider
 	defDefiFMintAddressProvider = "0x730e27f6c52d07b1a6ab39b639b617dc566c91af"
@@ -88,7 +88,7 @@ const (
 )
 
 // default list of API peers
-var defApiPeers = []string{"https://localhost:16761/api"}
+var defApiPeers = []string{"https://localhost:3000/api"}
 
 // defCorsAllowOrigins holds CORS default allowed origins.
 var defCorsAllowOrigins = []string{"*"}
@@ -98,7 +98,7 @@ var defVotingSources = make([]string, 0)
 
 // defERC20Logo defines default no-URL value for ERC20 logo list
 var defERC20Logo = map[common.Address]string{
-	common.HexToAddress(EmptyAddress): "https://repository.fantom.network/logos/erc20.svg",
+	common.HexToAddress(EmptyAddress): "https://repository.nextsmartchain.com/logos/erc20.svg",
 }
 
 // applyDefaults sets default values for configuration options.
@@ -111,7 +111,7 @@ func applyDefaults(cfg *viper.Viper) {
 	cfg.SetDefault(keySignaturePrivateKey, defSelfPrivateKey)
 	cfg.SetDefault(keyLoggingLevel, defLoggingLevel)
 	cfg.SetDefault(keyLoggingFormat, defLoggingFormat)
-	cfg.SetDefault(keyOperaUrl, defOperaUrl)
+	cfg.SetDefault(keyNextUrl, defNextUrl)
 	cfg.SetDefault(keyMongoUrl, defMongoUrl)
 	cfg.SetDefault(keyMongoDatabase, defMongoDatabase)
 	cfg.SetDefault(keySolCompilerPath, defSolCompilerPath)

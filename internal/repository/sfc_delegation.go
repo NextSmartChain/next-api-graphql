@@ -2,15 +2,15 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT Smart Chain full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
 package repository
 
 import (
-	"fantom-api-graphql/internal/repository/db"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/db"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"go.mongodb.org/mongo-driver/bson"
@@ -172,10 +172,10 @@ func (p *proxy) PendingRewards(addr *common.Address, valID *hexutil.Big) (*types
 	return p.rpc.PendingRewards(addr, valID.ToInt())
 }
 
-// DelegationOutstandingSFTM returns the amount of sFTM tokens for the delegation
+// DelegationOutstandingSNEXT returns the amount of sNEXT tokens for the delegation
 // identified by the delegator address and the stakerId.
-func (p *proxy) DelegationOutstandingSFTM(addr *common.Address, toStaker *hexutil.Big) (*hexutil.Big, error) {
-	val, err := p.rpc.DelegationOutstandingSFTM(addr, toStaker.ToInt())
+func (p *proxy) DelegationOutstandingSNEXT(addr *common.Address, toStaker *hexutil.Big) (*hexutil.Big, error) {
+	val, err := p.rpc.DelegationOutstandingSNEXT(addr, toStaker.ToInt())
 	if err != nil {
 		return nil, err
 	}

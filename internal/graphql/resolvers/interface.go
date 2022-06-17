@@ -3,7 +3,7 @@ package resolvers
 
 import (
 	"context"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
@@ -73,10 +73,10 @@ type ApiResolver interface {
 	// Epoch resolves information about epoch of the given id.
 	Epoch(*struct{ Id *hexutil.Uint64 }) (Epoch, error)
 
-	// LastStakerId resolves the last staker id in Opera blockchain.
+	// LastStakerId resolves the last staker id in NEXT blockchain.
 	LastStakerId() (hexutil.Uint64, error)
 
-	// StakersNum resolves the number of stakers in Opera blockchain.
+	// StakersNum resolves the number of stakers in NEXT blockchain.
 	StakersNum() (hexutil.Uint64, error)
 
 	// Staker resolves a staker information from SFC smart contract.
@@ -108,7 +108,7 @@ type ApiResolver interface {
 		Count   int32
 	}) (*DelegationList, error)
 
-	// Price resolves price details of the Opera blockchain token for the given target symbols.
+	// Price resolves price details of the NEXT blockchain token for the given target symbols.
 	Price(*struct{ To string }) (types.Price, error)
 
 	// GasPrice resolves the current amount of WEI for single Gas.

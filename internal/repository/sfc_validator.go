@@ -2,25 +2,25 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT/Lachesis full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
 package repository
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"math/big"
 )
 
-// LastValidatorId returns the last staker id in Opera blockchain.
+// LastValidatorId returns the last staker id in NEXT blockchain.
 func (p *proxy) LastValidatorId() (uint64, error) {
 	return p.rpc.LastValidatorId()
 }
 
-// ValidatorsCount returns the number of stakers in Opera blockchain.
+// ValidatorsCount returns the number of stakers in NEXT blockchain.
 func (p *proxy) ValidatorsCount() (uint64, error) {
 	return p.rpc.ValidatorsCount()
 }

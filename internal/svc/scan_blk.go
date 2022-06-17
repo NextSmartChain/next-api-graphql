@@ -2,8 +2,8 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"time"

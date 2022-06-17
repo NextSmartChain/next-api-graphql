@@ -1,4 +1,4 @@
-# Delegation represents a delegation on Opera block chain.
+# Delegation represents a delegation on NEXT block chain.
 type Delegation {
     # Address of the delegator account.
     address: Address!
@@ -66,12 +66,12 @@ type Delegation {
     # to the stake amount on premature unlock
     unlockPenalty(amount: BigInt!): BigInt!
 
-    # outstandingSFTM represents the amount of sFTM tokens representing
+    # outstandingSNEXT represents the amount of sNEXT tokens representing
     # the tokenized stake minted and un-repaid on this delegation.
-    outstandingSFTM: BigInt!
+    outstandingSNEXT: BigInt!
 
     # tokenizerAllowedToWithdraw indicates if the stake tokenizer allows the stake
-    # to be withdrawn. That means all the sFTM tokens have been repaid and the sFTM
+    # to be withdrawn. That means all the sNEXT tokens have been repaid and the sNEXT
     # debt is effectively zero for the delegation.
     tokenizerAllowedToWithdraw: Boolean!
 }

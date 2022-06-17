@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
-// Price represents a conversion price between FTM tokens an a target symbol.
+// Price represents a conversion price between NEXT tokens an a target symbol.
 type Price struct {
 	FromSymbol    string         `json:"FROMSYMBOL"`
 	ToSymbol      string         `json:"TOSYMBOL"`

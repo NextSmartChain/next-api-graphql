@@ -2,14 +2,14 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT Smart Chain full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
 package repository
 
 import (
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"math/big"
 )
@@ -145,6 +145,11 @@ func (p *proxy) RewardsAllowed() (bool, error) {
 // LockingAllowed indicates if the stake locking has been enabled in SFC.
 func (p *proxy) LockingAllowed() (bool, error) {
 	return p.rpc.LockingAllowed()
+}
+
+// IsSfcContract returns true if the given address points to the SFC contract.
+func (p *proxy) IsSfcContract(addr *common.Address) bool {
+	return bytes.Equal(addr.Bytes(), p.cfg.Staking.SFCContract.Bytes())
 }
 
 // LastKnownEpoch returns the id of the last known and scanned epoch.

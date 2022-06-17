@@ -2,8 +2,8 @@
 package svc
 
 import (
-	"fantom-api-graphql/internal/repository/cache/ring"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/cache/ring"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	etc "github.com/ethereum/go-ethereum/core/types"

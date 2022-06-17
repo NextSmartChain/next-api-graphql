@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -15,8 +15,8 @@ package rpc
 
 import (
 	"context"
-	"fantom-api-graphql/internal/repository/rpc/contracts"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -25,45 +25,45 @@ import (
 )
 
 // AmountStaked returns the current amount at stake for the given staker address and target validator
-func (ftm *FtmBridge) AmountStaked(addr *common.Address, valID *big.Int) (*big.Int, error) {
+func (next *NextBridge) AmountStaked(addr *common.Address, valID *big.Int) (*big.Int, error) {
 	// keep track of the operation
-	ftm.log.Debugf("verifying amount staked by %s to %d", addr.String(), valID.Uint64())
-	return ftm.SfcContract().GetStake(ftm.DefaultCallOpts(), *addr, valID)
+	next.log.Debugf("verifying amount staked by %s to %d", addr.String(), valID.Uint64())
+	return next.SfcContract().GetStake(next.DefaultCallOpts(), *addr, valID)
 }
 
 // AmountStakeLocked returns the current locked amount at stake for the given staker address and target validator.
-func (ftm *FtmBridge) AmountStakeLocked(addr *common.Address, valID *big.Int) (*big.Int, error) {
-	return ftm.SfcContract().GetLockedStake(ftm.DefaultCallOpts(), *addr, valID)
+func (next *NextBridge) AmountStakeLocked(addr *common.Address, valID *big.Int) (*big.Int, error) {
+	return next.SfcContract().GetLockedStake(next.DefaultCallOpts(), *addr, valID)
 }
 
 // AmountStakeUnlocked returns the current unlocked amount at stake for the given staker address and target validator.
-func (ftm *FtmBridge) AmountStakeUnlocked(addr *common.Address, valID *big.Int) (*big.Int, error) {
-	return ftm.SfcContract().GetUnlockedStake(ftm.DefaultCallOpts(), *addr, valID)
+func (next *NextBridge) AmountStakeUnlocked(addr *common.Address, valID *big.Int) (*big.Int, error) {
+	return next.SfcContract().GetUnlockedStake(next.DefaultCallOpts(), *addr, valID)
 }
 
 // StakeUnlockPenalty returns the expected penalty of a premature stake unlock.
-func (ftm *FtmBridge) StakeUnlockPenalty(addr *common.Address, valID *big.Int, amount *big.Int) (*big.Int, error) {
+func (next *NextBridge) StakeUnlockPenalty(addr *common.Address, valID *big.Int, amount *big.Int) (*big.Int, error) {
 	// pack call data
-	cd, err := ftm.SfcAbi().Pack("unlockStake", valID, amount)
+	cd, err := next.SfcAbi().Pack("unlockStake", valID, amount)
 	if err != nil {
-		ftm.log.Errorf("penalty for unlocking %d of %s to %d not available; %s", amount.Uint64(), addr.String(), valID.Uint64(), err.Error())
+		next.log.Errorf("penalty for unlocking %d of %s to %d not available; %s", amount.Uint64(), addr.String(), valID.Uint64(), err.Error())
 		return nil, err
 	}
 
 	// make the UnlockStake call as a view call to get the penalty value
-	data, err := ftm.eth.CallContract(context.Background(), ethereum.CallMsg{
+	data, err := next.eth.CallContract(context.Background(), ethereum.CallMsg{
 		From: *addr,
-		To:   &ftm.sfcConfig.SFCContract,
+		To:   &next.sfcConfig.SFCContract,
 		Data: cd,
 	}, nil)
 	if err != nil {
-		ftm.log.Errorf("penalty for unlocking %d of %s to %d not available; %s", amount.Uint64(), addr.String(), valID.Uint64(), err.Error())
+		next.log.Errorf("penalty for unlocking %d of %s to %d not available; %s", amount.Uint64(), addr.String(), valID.Uint64(), err.Error())
 		return nil, err
 	}
 
 	// make response size sanity check; we expect single big integer value
 	if len(data) != 32 {
-		ftm.log.Errorf("penalty for unlocking %d of %s to %d response not valid; expected 32 bytes, received %d bytes", amount.Uint64(), addr.String(), valID.Uint64(), len(data))
+		next.log.Errorf("penalty for unlocking %d of %s to %d response not valid; expected 32 bytes, received %d bytes", amount.Uint64(), addr.String(), valID.Uint64(), len(data))
 		return nil, err
 	}
 
@@ -72,7 +72,7 @@ func (ftm *FtmBridge) StakeUnlockPenalty(addr *common.Address, valID *big.Int, a
 }
 
 // PendingRewards returns a detail of delegation rewards waiting to be claimed for the given delegation.
-func (ftm *FtmBridge) PendingRewards(addr *common.Address, valID *big.Int) (*types.PendingRewards, error) {
+func (next *NextBridge) PendingRewards(addr *common.Address, valID *big.Int) (*types.PendingRewards, error) {
 	// prep the empty value
 	pr := types.PendingRewards{
 		Address: *addr,
@@ -81,9 +81,9 @@ func (ftm *FtmBridge) PendingRewards(addr *common.Address, valID *big.Int) (*typ
 	}
 
 	// get the pending rewards amount
-	amo, err := ftm.SfcContract().PendingRewards(ftm.DefaultCallOpts(), *addr, valID)
+	amo, err := next.SfcContract().PendingRewards(next.DefaultCallOpts(), *addr, valID)
 	if err != nil {
-		ftm.log.Criticalf("can not calculate pending rewards of %s to %d; %s", addr.String(), valID.Uint64(), err.Error())
+		next.log.Criticalf("can not calculate pending rewards of %s to %d; %s", addr.String(), valID.Uint64(), err.Error())
 		return &pr, nil
 	}
 
@@ -93,25 +93,25 @@ func (ftm *FtmBridge) PendingRewards(addr *common.Address, valID *big.Int) (*typ
 }
 
 // DelegationLock returns delegation lock information using SFC contract binding.
-func (ftm *FtmBridge) DelegationLock(addr *common.Address, valID *hexutil.Big) (dll *types.DelegationLock, err error) {
+func (next *NextBridge) DelegationLock(addr *common.Address, valID *hexutil.Big) (dll *types.DelegationLock, err error) {
 	// recover from panic here
 	defer func() {
 		if r := recover(); r != nil {
-			ftm.log.Criticalf("can not get SFC lock status on delegation %s to %d; SFC call panic", addr.String(), valID.String())
+			next.log.Criticalf("can not get SFC lock status on delegation %s to %d; SFC call panic", addr.String(), valID.String())
 			dll = &types.DelegationLock{}
 		}
 	}()
 
 	// get staker locking detail
-	lock, err := ftm.SfcContract().GetLockupInfo(ftm.DefaultCallOpts(), *addr, valID.ToInt())
+	lock, err := next.SfcContract().GetLockupInfo(next.DefaultCallOpts(), *addr, valID.ToInt())
 	if err != nil {
-		ftm.log.Errorf("delegation lock query failed; %v", err)
+		next.log.Errorf("delegation lock query failed; %v", err)
 		return nil, err
 	}
 
 	// are lock timers available?
 	if lock.FromEpoch == nil || lock.EndTime == nil {
-		ftm.log.Errorf("delegation lock details not available")
+		next.log.Errorf("delegation lock details not available")
 		return nil, fmt.Errorf("delegation lock missing")
 	}
 
@@ -126,38 +126,38 @@ func (ftm *FtmBridge) DelegationLock(addr *common.Address, valID *hexutil.Big) (
 
 // DelegationOutstandingSFTM returns the amount of sFTM tokens for the delegation
 // identified by the delegator address and the stakerId.
-func (ftm *FtmBridge) DelegationOutstandingSFTM(addr *common.Address, valID *big.Int) (*big.Int, error) {
+func (next *NextBridge) DelegationOutstandingSFTM(addr *common.Address, valID *big.Int) (*big.Int, error) {
 	// log action
-	ftm.log.Debugf("checking outstanding sFTM of %s to %d", addr.String(), valID.Uint64())
+	next.log.Debugf("checking outstanding sFTM of %s to %d", addr.String(), valID.Uint64())
 
 	// instantiate the contract and display its name
-	contract, err := contracts.NewSfcTokenizer(ftm.sfcConfig.TokenizerContract, ftm.eth)
+	contract, err := contracts.NewSfcTokenizer(next.sfcConfig.TokenizerContract, next.eth)
 	if err != nil {
-		ftm.log.Criticalf("failed to instantiate SFC Tokenizer contract; %s", err.Error())
+		next.log.Criticalf("failed to instantiate SFC Tokenizer contract; %s", err.Error())
 		return nil, err
 	}
 
 	// get the amount of outstanding sFTM
-	return contract.OutstandingSFTM(ftm.DefaultCallOpts(), *addr, valID)
+	return contract.OutstandingSFTM(next.DefaultCallOpts(), *addr, valID)
 }
 
 // DelegationTokenizerUnlocked returns the status of SFC Tokenizer lock
 // for a delegation identified by the address and staker id.
-func (ftm *FtmBridge) DelegationTokenizerUnlocked(addr *common.Address, valID *big.Int) (bool, error) {
+func (next *NextBridge) DelegationTokenizerUnlocked(addr *common.Address, valID *big.Int) (bool, error) {
 	// log action
-	ftm.log.Debugf("checking SFC tokenizer lock of %s to %d", addr.String(), valID.Uint64())
+	next.log.Debugf("checking SFC tokenizer lock of %s to %d", addr.String(), valID.Uint64())
 
 	// instantiate the contract and display its name
-	contract, err := contracts.NewSfcTokenizer(ftm.sfcConfig.TokenizerContract, ftm.eth)
+	contract, err := contracts.NewSfcTokenizer(next.sfcConfig.TokenizerContract, next.eth)
 	if err != nil {
-		ftm.log.Criticalf("failed to instantiate SFC Tokenizer contract: %s", err.Error())
+		next.log.Criticalf("failed to instantiate SFC Tokenizer contract: %s", err.Error())
 		return false, err
 	}
 
 	// get the lock status
-	lock, err := contract.AllowedToWithdrawStake(ftm.DefaultCallOpts(), *addr, valID)
+	lock, err := contract.AllowedToWithdrawStake(next.DefaultCallOpts(), *addr, valID)
 	if err != nil {
-		ftm.log.Criticalf("failed to get SFC Tokenizer lock status of %s to %d; %s", addr.String(), valID.Uint64(), err.Error())
+		next.log.Criticalf("failed to get SFC Tokenizer lock status of %s to %d; %s", addr.String(), valID.Uint64(), err.Error())
 		return false, err
 	}
 

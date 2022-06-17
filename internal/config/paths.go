@@ -20,11 +20,11 @@ func defaultConfigDir() string {
 	// Set the default config path for different
 	switch runtime.GOOS {
 	case "darwin":
-		return filepath.Join(home, "Library", "FantomApi")
+		return filepath.Join(home, "Library", "NEXTApi")
 	case "windows":
-		return filepath.Join(home, "FantomApi")
+		return filepath.Join(home, "NextApi")
 	default:
-		return filepath.Join(home, ".fantomapi")
+		return filepath.Join(home, ".nextapi")
 	}
 }
 

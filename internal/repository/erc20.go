@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"fantom-api-graphql/internal/config"
-	"fantom-api-graphql/internal/repository/cache"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/config"
+	"next-api-graphql/internal/repository/cache"
+	"next-api-graphql/internal/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )

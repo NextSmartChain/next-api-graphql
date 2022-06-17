@@ -1,5 +1,5 @@
 {
-  "app_name": "Chain4Travel GraphQL API Server",
+  "app_name": "NEXT GraphQL API Server",
   "cache": {
     "eviction": 900000000000,
     "size": 4096
@@ -8,7 +8,7 @@
     "sol": "/usr/bin/solc"
   },
   "db": {
-    "db": "chain4travel",
+    "db": "next",
     "url": "mongodb://localhost:27017"
   },
   "defi": {
@@ -21,11 +21,11 @@
     }
   },
   "erc20_logos": {
-    "0x0000000000000000000000000000000000000000": "https://repository.fantom.network/logos/erc20.svg"
+    "0x0000000000000000000000000000000000000000": "https://repository.nextsmartchain.com/logos/erc20.svg"
   },
   "erc20_tokens_file": "tokens.json",
-  "opera": {
-    "url": "/path/to/opera.ipc"
+  "next": {
+    "url": "/path/to/next.ipc"
   },
   "log": {
     "format": "%{color}%{level:-8s} %{shortpkg}/%{shortfunc}%{color:reset}: %{message}",
@@ -36,25 +36,25 @@
     "pkey": ""
   },
   "server": {
-    "bind": "localhost:16761",
+    "bind": "localhost:3000",
     "cors_origins": [
       "*"
     ],
-    "domain": "localhost:16761",
+    "domain": "localhost:3000",
     "header_timeout": 1,
     "idle_timeout": 1,
     "origin": "https://localhost",
     "peers": [
-      "https://localhost:16761/api"
+      "https://localhost:3000/api"
     ],
     "read_timeout": 2,
     "resolver_timeout": 30,
     "write_timeout": 15
   },
   "staking": {
-    "network_initializer": "0xd1005eed00000000000000000000000000000000",
-    "node_driver": "0xd100a01e00000000000000000000000000000000",
-    "sfc": "0xFC00FACE00000000000000000000000000000000",
+    "network_initializer": "0xa1005eed00000000000000000000000000000000",
+    "node_driver": "0xa100000000000000000000000000000000000000",
+    "sfc": "0xa1005fc000000000000000000000000000000000",
     "token": "0x0000000000000000000000000000000000000000",
     "tokenizer": "0x0000000000000000000000000000000000000000"
   },

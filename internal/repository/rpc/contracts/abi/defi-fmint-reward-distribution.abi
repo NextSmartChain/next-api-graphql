@@ -324,7 +324,7 @@
       "name": "addressProvider",
       "outputs": [
         {
-          "internalType": "contract IFantomMintAddressProvider",
+          "internalType": "contract INEXTMintAddressProvider",
           "name": "",
           "type": "address"
         }

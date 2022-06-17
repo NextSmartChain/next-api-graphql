@@ -1,8 +1,8 @@
 package resolvers
 
 import (
-	"fantom-api-graphql/internal/repository"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -24,8 +24,8 @@ type EstimatedRewards struct {
 	LastEpoch   Epoch
 }
 
-// weiToFtmDecimals represents decimal conversion between WEI and FTM units.
-var weiToFtmDecimals = new(big.Int).SetUint64(1000000000000000000)
+// weiToNextDecimals represents decimal conversion between WEI and NEXT units.
+var weiToNextDecimals = new(big.Int).SetUint64(1000000000000000000)
 
 // NewEstimatedRewards builds new resolvable estimated rewards structure.
 func NewEstimatedRewards(ep *types.Epoch, amount *hexutil.Uint64, total *hexutil.Big) EstimatedRewards {
@@ -56,7 +56,7 @@ func (rs *rootResolver) estimateRewardsByAddress(addr *common.Address, ep *types
 	}
 
 	// get the value of the balance as Uint64 value
-	val := hexutil.Uint64(new(big.Int).Div(balance.ToInt(), weiToFtmDecimals).Uint64())
+	val := hexutil.Uint64(new(big.Int).Div(balance.ToInt(), weiToNextDecimals).Uint64())
 	return NewEstimatedRewards(ep, &val, total), nil
 }
 

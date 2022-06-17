@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
-// Block represents basic information provided by the API about block inside Opera blockchain.
+// Block represents basic information provided by the API about block inside NEXT blockchain.
 type Block struct {
 	// Number represents the block number. nil when its pending block.
 	Number hexutil.Uint64 `json:"number"`

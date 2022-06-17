@@ -3,7 +3,7 @@ package db
 
 import (
 	"context"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -329,7 +329,7 @@ func (db *MongoDbBridge) wrListCollectRangeMarks(col *mongo.Collection, list *ty
 	return list, nil
 }
 
-// wrListBorderPk finds the top PK of the withdraw requests collection based on given filter and options.
+// wrListBorderPk finds the top PK of the withdrawal requests collection based on given filter and options.
 func (db *MongoDbBridge) wrListBorderPk(col *mongo.Collection, filter bson.D, opt *options.FindOneOptions) (uint64, error) {
 	// prep container
 	var row struct {

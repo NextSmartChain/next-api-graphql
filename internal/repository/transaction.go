@@ -2,7 +2,7 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT/Lachesis full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
@@ -11,8 +11,8 @@ package repository
 import (
 	"bytes"
 	"errors"
-	"fantom-api-graphql/internal/repository/cache"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/cache"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -20,7 +20,7 @@ import (
 )
 
 // ErrTransactionNotFound represents an error returned if a transaction can not be found.
-var ErrTransactionNotFound = errors.New("requested transaction can not be found in Opera blockchain")
+var ErrTransactionNotFound = errors.New("requested transaction can not be found in NEXT blockchain")
 
 // StoreTransaction notifies a new incoming transaction from blockchain to the repository.
 func (p *proxy) StoreTransaction(block *types.Block, trx *types.Transaction) error {
@@ -32,7 +32,7 @@ func (p *proxy) CacheTransaction(trx *types.Transaction) {
 	p.cache.AddTransaction(trx)
 }
 
-// Transaction returns a transaction at Opera blockchain by a hash, nil if not found.
+// Transaction returns a transaction at NEXT blockchain by a hash, nil if not found.
 // If the transaction is not found, ErrTransactionNotFound error is returned.
 func (p *proxy) Transaction(hash *common.Hash, needBinary bool) (*types.Transaction, error) {
 	// log
@@ -68,7 +68,7 @@ func (p *proxy) Transaction(hash *common.Hash, needBinary bool) (*types.Transact
 	return trx, nil
 }
 
-// LoadTransaction returns a transaction at Opera blockchain
+// LoadTransaction returns a transaction at NEXT blockchain
 // by a hash loaded directly from the node.
 func (p *proxy) LoadTransaction(hash *common.Hash) (*types.Transaction, error) {
 	return p.rpc.Transaction(hash)

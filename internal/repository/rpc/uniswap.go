@@ -2,7 +2,7 @@
 Package rpc implements bridge to Lachesis full node API interface.
 
 We recommend using local IPC for fast and the most efficient inter-process communication between the API server
-and an Opera/Lachesis node. Any remote RPC connection will work, but the performance may be significantly degraded
+and an NEXT Smart Chain node. Any remote RPC connection will work, but the performance may be significantly degraded
 by extra networking overhead of remote RPC calls.
 
 You should also consider security implications of opening Lachesis RPC interface for a remote access.
@@ -14,7 +14,7 @@ We strongly discourage opening Lachesis RPC interface for unrestricted Internet 
 package rpc
 
 import (
-	"fantom-api-graphql/internal/repository/rpc/contracts"
+	"next-api-graphql/internal/repository/rpc/contracts"
 	"math/big"
 	"strings"
 
@@ -28,18 +28,18 @@ import (
 //go:generate tools/abigen.sh --abi ./contracts/abi/uniswap-router.abi --pkg contracts --type UniswapRouter --out ./contracts/uniswap_router.go
 
 // NativeTokenAddress returns an address of native token.
-func (ftm *FtmBridge) NativeTokenAddress() (*common.Address, error) {
+func (next *NextBridge) NativeTokenAddress() (*common.Address, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapRouter(ftm.uniswapConfig.Router, ftm.eth)
+	contract, err := contracts.NewUniswapRouter(next.uniswapConfig.Router, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap router contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap router contract not found; %s", err.Error())
 		return nil, err
 	}
 
 	// get the native token address
 	adr, err := contract.WETH(nil)
 	if err != nil {
-		ftm.log.Errorf("Native token address not available; %s", err.Error())
+		next.log.Errorf("Native token address not available; %s", err.Error())
 		return nil, err
 	}
 
@@ -47,18 +47,18 @@ func (ftm *FtmBridge) NativeTokenAddress() (*common.Address, error) {
 }
 
 // UniswapPair returns an address of an Uniswap pair for the given tokens.
-func (ftm *FtmBridge) UniswapPair(tokenA *common.Address, tokenB *common.Address) (*common.Address, error) {
+func (next *NextBridge) UniswapPair(tokenA *common.Address, tokenB *common.Address) (*common.Address, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapFactory(ftm.uniswapConfig.Core, ftm.eth)
+	contract, err := contracts.NewUniswapFactory(next.uniswapConfig.Core, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap factory contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap factory contract not found; %s", err.Error())
 		return nil, err
 	}
 
 	// try to get the pair
 	pair, err := contract.GetPair(nil, *tokenA, *tokenB)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair not found for tokens %s and %s; %s", tokenA.String(), tokenB.String(), err.Error())
+		next.log.Errorf("Uniswap pair not found for tokens %s and %s; %s", tokenA.String(), tokenB.String(), err.Error())
 		return nil, err
 	}
 
@@ -66,18 +66,18 @@ func (ftm *FtmBridge) UniswapPair(tokenA *common.Address, tokenB *common.Address
 }
 
 // UniswapPairs returns list of all token pairs managed by Uniswap core.
-func (ftm *FtmBridge) UniswapPairs(whiteListedOnly bool) ([]common.Address, error) {
+func (next *NextBridge) UniswapPairs(whiteListedOnly bool) ([]common.Address, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapFactory(ftm.uniswapConfig.Core, ftm.eth)
+	contract, err := contracts.NewUniswapFactory(next.uniswapConfig.Core, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap factory contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap factory contract not found; %s", err.Error())
 		return nil, err
 	}
 
 	// get the number of pairs
 	length, err := contract.AllPairsLength(nil)
 	if err != nil || length == nil {
-		ftm.log.Error("Uniswap pairs array length not available")
+		next.log.Error("Uniswap pairs array length not available")
 		return nil, err
 	}
 
@@ -90,13 +90,13 @@ func (ftm *FtmBridge) UniswapPairs(whiteListedOnly bool) ([]common.Address, erro
 		// get the pair address
 		adr, err := contract.AllPairs(nil, index.SetUint64(i))
 		if err != nil {
-			ftm.log.Errorf("error loading Uniswap pair; %s", err.Error())
+			next.log.Errorf("error loading Uniswap pair; %s", err.Error())
 			continue
 		}
 
 		// check the pair (is it on the white list?)
 		// add the address to the list, if it's ok
-		if !whiteListedOnly || ftm.isUniswapPairWhitelisted(&adr) {
+		if !whiteListedOnly || next.isUniswapPairWhitelisted(&adr) {
 			list = append(list, adr)
 		}
 	}
@@ -106,12 +106,12 @@ func (ftm *FtmBridge) UniswapPairs(whiteListedOnly bool) ([]common.Address, erro
 
 // isUniswapPairWhitelisted checks if the given Uniswap pair is whitelisted
 // on our configuration.
-func (ftm *FtmBridge) isUniswapPairWhitelisted(pair *common.Address) bool {
+func (next *NextBridge) isUniswapPairWhitelisted(pair *common.Address) bool {
 	// decode the pair address
 	pairAddr := pair.String()
 
 	// check the pair address against all the white listed pairs in config
-	for _, addr := range ftm.uniswapConfig.PairsWhiteList {
+	for _, addr := range next.uniswapConfig.PairsWhiteList {
 		if strings.EqualFold(addr.String(), pairAddr) {
 			return true
 		}
@@ -123,22 +123,22 @@ func (ftm *FtmBridge) isUniswapPairWhitelisted(pair *common.Address) bool {
 
 // UniswapQuoteInput calculates optimal input on sibling token based on input amount and
 // self reserves of the analyzed token.
-func (ftm *FtmBridge) UniswapQuoteInput(
+func (next *NextBridge) UniswapQuoteInput(
 	amountA hexutil.Big,
 	reserveA hexutil.Big,
 	reserveB hexutil.Big,
 ) (hexutil.Big, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapRouter(ftm.uniswapConfig.Router, ftm.eth)
+	contract, err := contracts.NewUniswapRouter(next.uniswapConfig.Router, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap router contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap router contract not found; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// get the quote amount
 	amount, err := contract.Quote(nil, amountA.ToInt(), reserveA.ToInt(), reserveB.ToInt())
 	if err != nil {
-		ftm.log.Errorf("can not calculate Uniswap quote; %s", err.Error())
+		next.log.Errorf("can not calculate Uniswap quote; %s", err.Error())
 		return hexutil.Big{}, err
 	}
 
@@ -147,33 +147,33 @@ func (ftm *FtmBridge) UniswapQuoteInput(
 
 // UniswapAmountsOut resolves a list of output amounts for the given
 // input amount and a list of tokens to be used to make the swap operation.
-func (ftm *FtmBridge) UniswapAmountsOut(amountIn hexutil.Big, tokens []common.Address) ([]hexutil.Big, error) {
+func (next *NextBridge) UniswapAmountsOut(amountIn hexutil.Big, tokens []common.Address) ([]hexutil.Big, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapRouter(ftm.uniswapConfig.Router, ftm.eth)
+	contract, err := contracts.NewUniswapRouter(next.uniswapConfig.Router, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap router contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap router contract not found; %s", err.Error())
 		return nil, err
 	}
 
-	return ftm.uniswapLoadAmounts(contract.GetAmountsOut, (*big.Int)(&amountIn), tokens)
+	return next.uniswapLoadAmounts(contract.GetAmountsOut, (*big.Int)(&amountIn), tokens)
 }
 
 // UniswapAmountsIn resolves a list of input amounts for the given
 // output amount and a list of tokens to be used to make the swap operation.
-func (ftm *FtmBridge) UniswapAmountsIn(amountOut hexutil.Big, tokens []common.Address) ([]hexutil.Big, error) {
+func (next *NextBridge) UniswapAmountsIn(amountOut hexutil.Big, tokens []common.Address) ([]hexutil.Big, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapRouter(ftm.uniswapConfig.Router, ftm.eth)
+	contract, err := contracts.NewUniswapRouter(next.uniswapConfig.Router, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap router contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap router contract not found; %s", err.Error())
 		return nil, err
 	}
 
-	return ftm.uniswapLoadAmounts(contract.GetAmountsIn, (*big.Int)(&amountOut), tokens)
+	return next.uniswapLoadAmounts(contract.GetAmountsIn, (*big.Int)(&amountOut), tokens)
 }
 
 // uniswapLoadAmounts loads a list of swap amounts using the given loader function
 // of the Uniswap router contract.
-func (ftm *FtmBridge) uniswapLoadAmounts(
+func (next *NextBridge) uniswapLoadAmounts(
 	loader func(*bind.CallOpts, *big.Int, []common.Address) ([]*big.Int, error),
 	amount *big.Int,
 	tokens []common.Address,
@@ -181,7 +181,7 @@ func (ftm *FtmBridge) uniswapLoadAmounts(
 	// get the amounts list
 	out, err := loader(nil, amount, tokens)
 	if err != nil {
-		ftm.log.Errorf("can not load swap amounts; %s", err.Error())
+		next.log.Errorf("can not load swap amounts; %s", err.Error())
 		return nil, err
 	}
 
@@ -195,11 +195,11 @@ func (ftm *FtmBridge) uniswapLoadAmounts(
 }
 
 // UniswapTokens returns list of addresses of tokens involved in a Uniswap pair.
-func (ftm *FtmBridge) UniswapTokens(pair *common.Address) ([]common.Address, error) {
+func (next *NextBridge) UniswapTokens(pair *common.Address) ([]common.Address, error) {
 	// get the pair contract if possible
-	contract, err := contracts.NewUniswapPair(*pair, ftm.eth)
+	contract, err := contracts.NewUniswapPair(*pair, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -209,14 +209,14 @@ func (ftm *FtmBridge) UniswapTokens(pair *common.Address) ([]common.Address, err
 	// get the first token
 	tokens[0], err = contract.Token0(nil)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s token A not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s token A not found; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
 	// get the second token
 	tokens[1], err = contract.Token1(nil)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s token B not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s token B not found; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -224,11 +224,11 @@ func (ftm *FtmBridge) UniswapTokens(pair *common.Address) ([]common.Address, err
 }
 
 // UniswapReserves returns list of token reserve amounts in a Uniswap pair.
-func (ftm *FtmBridge) UniswapReserves(pair *common.Address) ([]hexutil.Big, error) {
+func (next *NextBridge) UniswapReserves(pair *common.Address) ([]hexutil.Big, error) {
 	// get the reserves record from the contract
-	rs, err := ftm.uniswapReservesRecord(pair)
+	rs, err := next.uniswapReservesRecord(pair)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s reserves not available; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s reserves not available; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -241,11 +241,11 @@ func (ftm *FtmBridge) UniswapReserves(pair *common.Address) ([]hexutil.Big, erro
 }
 
 // UniswapReservesTimeStamp returns the timestamp of the reserves of a Uniswap pair.
-func (ftm *FtmBridge) UniswapReservesTimeStamp(pair *common.Address) (hexutil.Uint64, error) {
+func (next *NextBridge) UniswapReservesTimeStamp(pair *common.Address) (hexutil.Uint64, error) {
 	// get the reserves record from the contract
-	rs, err := ftm.uniswapReservesRecord(pair)
+	rs, err := next.uniswapReservesRecord(pair)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s reserves not available; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s reserves not available; %s", pair.String(), err.Error())
 		return 0, err
 	}
 
@@ -253,11 +253,11 @@ func (ftm *FtmBridge) UniswapReservesTimeStamp(pair *common.Address) (hexutil.Ui
 }
 
 // UniswapCumulativePrices returns list of token cumulative prices of a Uniswap pair.
-func (ftm *FtmBridge) UniswapCumulativePrices(pair *common.Address) ([]hexutil.Big, error) {
+func (next *NextBridge) UniswapCumulativePrices(pair *common.Address) ([]hexutil.Big, error) {
 	// get the pair contract if possible
-	contract, err := contracts.NewUniswapPair(*pair, ftm.eth)
+	contract, err := contracts.NewUniswapPair(*pair, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -268,7 +268,7 @@ func (ftm *FtmBridge) UniswapCumulativePrices(pair *common.Address) ([]hexutil.B
 	// get the first token price
 	price, err = contract.Price0CumulativeLast(nil)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s cumulative price A not available; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s cumulative price A not available; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -278,7 +278,7 @@ func (ftm *FtmBridge) UniswapCumulativePrices(pair *common.Address) ([]hexutil.B
 	// get the second token price
 	price, err = contract.Price1CumulativeLast(nil)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s cumulative price B not available; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s cumulative price B not available; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -288,15 +288,15 @@ func (ftm *FtmBridge) UniswapCumulativePrices(pair *common.Address) ([]hexutil.B
 }
 
 // uniswapReservesRecord loads the reserves record for the given Uniswap pair.
-func (ftm *FtmBridge) uniswapReservesRecord(pair *common.Address) (*struct {
+func (next *NextBridge) uniswapReservesRecord(pair *common.Address) (*struct {
 	Reserve0           *big.Int
 	Reserve1           *big.Int
 	BlockTimestampLast uint32
 }, error) {
 	// get the pair contract if possible
-	contract, err := contracts.NewUniswapPair(*pair, ftm.eth)
+	contract, err := contracts.NewUniswapPair(*pair, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
 		return nil, err
 	}
 
@@ -306,18 +306,18 @@ func (ftm *FtmBridge) uniswapReservesRecord(pair *common.Address) (*struct {
 }
 
 // UniswapLastKValue returns the last value of the pool control coefficient.
-func (ftm *FtmBridge) UniswapLastKValue(pair *common.Address) (hexutil.Big, error) {
+func (next *NextBridge) UniswapLastKValue(pair *common.Address) (hexutil.Big, error) {
 	// get the pair contract if possible
-	contract, err := contracts.NewUniswapPair(*pair, ftm.eth)
+	contract, err := contracts.NewUniswapPair(*pair, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s not found; %s", pair.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
 	// try to get the reserves
 	k, err := contract.KLast(nil)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair %s coefficient K not available; %s", pair.String(), err.Error())
+		next.log.Errorf("Uniswap pair %s coefficient K not available; %s", pair.String(), err.Error())
 		return hexutil.Big{}, err
 	}
 
@@ -325,21 +325,21 @@ func (ftm *FtmBridge) UniswapLastKValue(pair *common.Address) (hexutil.Big, erro
 }
 
 // UniswapPairContract returns instance of this contract according to given pair address
-func (ftm *FtmBridge) UniswapPairContract(pairAddres *common.Address) (*contracts.UniswapPair, error) {
-	contract, err := contracts.NewUniswapPair(*pairAddres, ftm.eth)
+func (next *NextBridge) UniswapPairContract(pairAddres *common.Address) (*contracts.UniswapPair, error) {
+	contract, err := contracts.NewUniswapPair(*pairAddres, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap pair contract %s not found; %s", pairAddres.String(), err.Error())
+		next.log.Errorf("Uniswap pair contract %s not found; %s", pairAddres.String(), err.Error())
 		return nil, err
 	}
 	return contract, nil
 }
 
 // UniswapFactoryContract returns an instance of an Uniswap factory
-func (ftm *FtmBridge) UniswapFactoryContract() (*contracts.UniswapFactory, error) {
+func (next *NextBridge) UniswapFactoryContract() (*contracts.UniswapFactory, error) {
 	// get the router contract if possible
-	contract, err := contracts.NewUniswapFactory(ftm.uniswapConfig.Core, ftm.eth)
+	contract, err := contracts.NewUniswapFactory(next.uniswapConfig.Core, next.eth)
 	if err != nil {
-		ftm.log.Errorf("Uniswap factory contract not found; %s", err.Error())
+		next.log.Errorf("Uniswap factory contract not found; %s", err.Error())
 		return nil, err
 	}
 	return contract, nil

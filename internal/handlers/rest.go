@@ -3,8 +3,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"fantom-api-graphql/internal/logger"
-	"fantom-api-graphql/internal/repository"
+	"next-api-graphql/internal/logger"
+	"next-api-graphql/internal/repository"
 	"net/http"
 )
 

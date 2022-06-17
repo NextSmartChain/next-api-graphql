@@ -2,7 +2,7 @@
 Package repository implements repository for handling fast and efficient access to data required
 by the resolvers of the API server.
 
-Internally it utilizes RPC to access Opera/Lachesis full node for blockchain interaction. Mongo database
+Internally it utilizes RPC to access NEXT full node for blockchain interaction. Mongo database
 for fast, robust and scalable off-chain data storage, especially for aggregated and pre-calculated data mining
 results. BigCache for in-memory object storage to speed up loading of frequently accessed entities.
 */
@@ -10,9 +10,9 @@ package repository
 
 import (
 	"errors"
-	"fantom-api-graphql/internal/repository/cache"
-	"fantom-api-graphql/internal/repository/rpc"
-	"fantom-api-graphql/internal/types"
+	"next-api-graphql/internal/repository/cache"
+	"next-api-graphql/internal/repository/rpc"
+	"next-api-graphql/internal/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -21,7 +21,7 @@ import (
 )
 
 // ErrBlockNotFound represents an error returned if a block can not be found.
-var ErrBlockNotFound = errors.New("requested block can not be found in Opera blockchain")
+var ErrBlockNotFound = errors.New("requested block can not be found in NEXT blockchain")
 
 // ObservedHeaders provides a channel fed with new headers observed
 // by the connected blockchain node.
@@ -29,7 +29,7 @@ func (p *proxy) ObservedHeaders() chan *etc.Header {
 	return p.rpc.ObservedBlockProxy()
 }
 
-// BlockHeight returns the current height of the Opera blockchain in blocks.
+// BlockHeight returns the current height of the NEXT blockchain in blocks.
 func (p *proxy) BlockHeight() (*hexutil.Big, error) {
 	return p.rpc.BlockHeight()
 }
@@ -49,7 +49,7 @@ func (p *proxy) CacheBlock(blk *types.Block) {
 	p.cache.AddBlock(blk)
 }
 
-// BlockByNumber returns a block at Opera blockchain represented by a number. Top block is returned if the number
+// BlockByNumber returns a block at NEXT blockchain represented by a number. Top block is returned if the number
 // is not provided.
 // If the block is not found, ErrBlockNotFound error is returned.
 func (p *proxy) BlockByNumber(num *hexutil.Uint64) (*types.Block, error) {
@@ -61,7 +61,7 @@ func (p *proxy) BlockByNumber(num *hexutil.Uint64) (*types.Block, error) {
 	return p.getBlock(num.String(), p.blockByTag)
 }
 
-// BlockByHash returns a block at Opera blockchain represented by a hash. Top block is returned if the hash
+// BlockByHash returns a block at NEXT blockchain represented by a hash. Top block is returned if the hash
 // is not provided.
 // If the block is not found, ErrBlockNotFound error is returned.
 func (p *proxy) BlockByHash(hash *common.Hash) (*types.Block, error) {
@@ -111,7 +111,7 @@ func (p *proxy) getBlock(tag string, pull func(*string) (*types.Block, error)) (
 	return blk, nil
 }
 
-// blockByTag returns a block at Opera blockchain represented by given tag.
+// blockByTag returns a block at NEXT blockchain represented by given tag.
 // The tag could be an encoded block number, or a predefined string tag for "earliest", "latest" or "pending" block.
 func (p *proxy) blockByTag(tag *string) (*types.Block, error) {
 	// inform what we do
