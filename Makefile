@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
 # Makefile for the NEXT API GraphQL Server
 #
-# v0.1 (2020/03/09)  - Initial version, base API server build.
+# v3.3.0 (2022/06/17)  - Initial version, base API server build.
 # (c) NEXT Foundation, 2022
 # --------------------------------------------------------------------------
 
