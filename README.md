@@ -1,18 +1,21 @@
-# Fantom GraphQL API Server
-[![Go Report Card](https://goreportcard.com/badge/github.com/NextSmartChain/next-api-graphql)](https://goreportcard.com/report/github.com/Fantom-foundation/next-api-graphql)
+# Next Smart Chain GraphQL API Server
 
-GraphQL API server for Fantom powered blockchain network.
+GraphQL API server for NEXT Smart Chain powered blockchain network.
 
 ## Releases
 Please check the [release tags](https://github.com/NextSmartChain/next-api-graphql/tags) to get more details and to download previous releases.
 
-#### Version 0.2.0, pending
-This version connects with the Lachesis v.0.7.0-rc1. The SFC contract ABI bundled with the API is version 2.0.2-rc1.
+#### Version 0.3.1
+This version connects with the Orion protocol on the NEXT Smart Chain blockchain. The SFC contract ABI bundled with the API is version 3.3.0.
 
-The release brings new fluid delegations and rewards system. Each address is be able to delegate to multiple stakers. Delegation can be locked to certain time, at least 14 days and up to 1 year, to get higher rewards. Please check our website [Fantom.Foundation](https://fantom.foundation) and the [Special Fee Contract repository](https://github.com/NextSmartChain/fantom-sfc) for more details.
+## Requirements
 
-#### Version 0.1.0, released on 8/2020
-This is the version you want to be able to connect with Orion v.0.6.0-rc2. The SFC contract ABI bundled with this API release is the version 1.1.0-rc1. The release uses Orion API v0.6.0 which recognizes single delegation per address and no delegation locking.
+### MongoDB installation
+
+Persistent data are stored in a MongoDB database. Going through the installation and
+configuration process of MongoDB is out of scope here, please consult
+[MongoDB manual](https://docs.mongodb.com/manual/) to install and configure appropriate
+MongoDB environment for your deployment of the API server.
 
 ## Building the source
 
@@ -30,17 +33,9 @@ use any location.
 
 ## Running the API server
 
-To run the API Server you need access to a RPC interface of a full NEXT Smart Chain node. Please
-follow [NEXT](https://github.com/NextSmartChain/go-next) instructions to build
-and run the node. Alternatively you can obtain access to a remotely running instance
-of NEXT.
+To run the API Server you need access to a RPC interface of a full NEXT Smart Chain node. Alternatively you can obtain access to a remotely running instance of NEXT on rpc.nextsmartchain.com.
 
 We recommend using local IPC channel for communication between a NEXT Smart Chain node and the
 API Server for performance and security reasons. Please consider security implications
 of opening NEXT RPC to outside access, especially if you enable "personal" commands
 on your node while keeping your account keys in the NEXT key store.
-
-Persistent data are stored in a MongoDB database. Going through the installation and
-configuration process of MongoDB is out of scope here, please consult
-[MongoDB manual](https://docs.mongodb.com/manual/) to install and configure appropriate
-MongoDB environment for your deployment of the API server.
