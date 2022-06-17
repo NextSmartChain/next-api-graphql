@@ -124,11 +124,11 @@ func (next *NextBridge) DelegationLock(addr *common.Address, valID *hexutil.Big)
 	}, nil
 }
 
-// DelegationOutstandingSFTM returns the amount of sFTM tokens for the delegation
+// DelegationOutstandingSNEXT returns the amount of sNEXT tokens for the delegation
 // identified by the delegator address and the stakerId.
-func (next *NextBridge) DelegationOutstandingSFTM(addr *common.Address, valID *big.Int) (*big.Int, error) {
+func (next *NextBridge) DelegationOutstandingSNEXT(addr *common.Address, valID *big.Int) (*big.Int, error) {
 	// log action
-	next.log.Debugf("checking outstanding sFTM of %s to %d", addr.String(), valID.Uint64())
+	next.log.Debugf("checking outstanding sNEXT of %s to %d", addr.String(), valID.Uint64())
 
 	// instantiate the contract and display its name
 	contract, err := contracts.NewSfcTokenizer(next.sfcConfig.TokenizerContract, next.eth)
@@ -137,8 +137,8 @@ func (next *NextBridge) DelegationOutstandingSFTM(addr *common.Address, valID *b
 		return nil, err
 	}
 
-	// get the amount of outstanding sFTM
-	return contract.OutstandingSFTM(next.DefaultCallOpts(), *addr, valID)
+	// get the amount of outstanding sNEXT
+	return contract.OutstandingSNEXT(next.DefaultCallOpts(), *addr, valID)
 }
 
 // DelegationTokenizerUnlocked returns the status of SFC Tokenizer lock

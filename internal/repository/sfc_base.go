@@ -147,11 +147,6 @@ func (p *proxy) LockingAllowed() (bool, error) {
 	return p.rpc.LockingAllowed()
 }
 
-// IsSfcContract returns true if the given address points to the SFC contract.
-func (p *proxy) IsSfcContract(addr *common.Address) bool {
-	return bytes.Equal(addr.Bytes(), p.cfg.Staking.SFCContract.Bytes())
-}
-
 // LastKnownEpoch returns the id of the last known and scanned epoch.
 func (p *proxy) LastKnownEpoch() (uint64, error) {
 	return p.db.LastKnownEpoch()

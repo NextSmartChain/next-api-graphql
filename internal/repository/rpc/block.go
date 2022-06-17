@@ -32,17 +32,17 @@ const (
 // of the blockchain. It returns nil if the block height can not be pulled.
 func (next *NextBridge) MustBlockHeight() *big.Int {
 	var val hexutil.Big
-	if err := ftm.rpc.Call(&val, "ftm_blockNumber"); err != nil {
-		ftm.log.Errorf("failed block height check; %s", err.Error())
+	if err := next.rpc.Call(&val, "next_blockNumber"); err != nil {
+		next.log.Errorf("failed block height check; %s", err.Error())
 		return nil
 	}
 	return val.ToInt()
 }
 
 // BlockHeight returns the current block height of the Next blockchain.
-func (ftm *NextBridge) BlockHeight() (*hexutil.Big, error) {
+func (next *NextBridge) BlockHeight() (*hexutil.Big, error) {
 	// keep track of the operation
-	ftm.log.Debugf("checking current block height")
+	next.log.Debugf("checking current block height")
 
 	// call for data
 	var height hexutil.Big
